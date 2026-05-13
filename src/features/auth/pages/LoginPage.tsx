@@ -2,9 +2,14 @@ import { useForm } from "react-hook-form";
 import type { LoginUserInput } from "./types";
 import { Lock, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
+import { useLogin } from "../hooks/useLogin";
+
 const LoginPage = () => {
   // states
   const [isShowPassword, setShowPassword] = useState<Boolean>(false);
+
+  const loginMutation = useLogin();
+
   const {
     register,
     handleSubmit,
@@ -17,7 +22,11 @@ const LoginPage = () => {
   });
 
   const onSubmit = async (data: LoginUserInput) => {
-    console.log(data);
+    loginMutation.mutate(data, {
+      onSuccess: (data) => {
+        localStorage.setItem("token", data.accessToken)
+      }
+    });
   };
 
   const handleViewPassword = () => {
@@ -26,7 +35,7 @@ const LoginPage = () => {
 
   return (
     <main className="flex justify-center items-center h-screen bg-[#e1eafa]">
-      <section className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
+      <section className="w-full md:max-w-md max-w-xs bg-white rounded-2xl shadow-lg p-8">
         <h1 className="text-xl font-bold text-center mt-2">
           Sign in to WorksyHub
         </h1>
