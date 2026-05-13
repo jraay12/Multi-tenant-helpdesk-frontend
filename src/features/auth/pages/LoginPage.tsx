@@ -5,8 +5,7 @@ import { useState } from "react";
 import { useLogin } from "../hooks/useLogin";
 import { useNavigate } from "react-router";
 const LoginPage = () => {
-
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   // states
   const [isShowPassword, setShowPassword] = useState<Boolean>(false);
 
@@ -27,6 +26,7 @@ const LoginPage = () => {
     loginMutation.mutate(data, {
       onSuccess: (data) => {
         localStorage.setItem("token", data.accessToken);
+        navigate("/", { replace: true });
       },
     });
   };
@@ -131,12 +131,19 @@ const LoginPage = () => {
             {isSubmitting ? "Signing in..." : "Sign In"}
           </button>
         </form>
-          
+
         <div className="w-full border mt-5 border-gray-100"></div>
         <section className="text-center mt-5">
-          <p className="text-sm">Don't have an account? <span className="text-blue-500 cursor-pointer" onClick={() => navigate("/register")}>Register here</span></p>
+          <p className="text-sm">
+            Don't have an account?{" "}
+            <span
+              className="text-blue-500 cursor-pointer"
+              onClick={() => navigate("/register")}
+            >
+              Register here
+            </span>
+          </p>
         </section>
-
       </section>
     </main>
   );
