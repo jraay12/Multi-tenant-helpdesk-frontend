@@ -1,12 +1,15 @@
 
 import './App.css'
+import { Route, Routes } from 'react-router'
+import LoginPage from './features/auth/pages/LoginPage'
 
 function App() {
 
   return (
-    <div className='h-screen bg-black'>
-
-    </div>
+    <Routes>
+      {/* Public Routes */}
+      <Route path='/login' element={<LoginPage />}/>
+    </Routes>
   )
 }
 
