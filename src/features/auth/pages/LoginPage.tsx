@@ -1,8 +1,10 @@
 import { useForm } from "react-hook-form";
 import type { LoginUserInput } from "./types";
-import { Lock } from "lucide-react";
-import { EyeClosed, Eye } from "lucide-react";
+import { Lock, Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 const LoginPage = () => {
+  // states
+  const [isShowPassword, setShowPassword] = useState<Boolean>(false);
   const {
     register,
     handleSubmit,
@@ -16,6 +18,10 @@ const LoginPage = () => {
 
   const onSubmit = async (data: LoginUserInput) => {
     console.log(data);
+  };
+
+  const handleViewPassword = () => {
+    setShowPassword(!isShowPassword);
   };
 
   return (
@@ -65,14 +71,16 @@ const LoginPage = () => {
           <div className="flex flex-col gap-1">
             <div className="flex justify-between">
               <label className="text-sm font-medium">Password</label>
-              <p className="text-sm text-blue-600 font-medium cursor-pointer">Forgot Password?</p>
+              <p className="text-sm text-blue-800 font-medium cursor-pointer">
+                Forgot Password?
+              </p>
             </div>
 
             <div className="relative w-full">
               <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black" />
 
               <input
-                type="password"
+                type={isShowPassword ? "text" : "password"}
                 placeholder="••••••••"
                 {...register("password", {
                   required: "Password is required",
@@ -81,13 +89,24 @@ const LoginPage = () => {
                     message: "Password must be at least 6 characters",
                   },
                 })}
-                className="border border-gray-200 rounded-lg pl-9 pr-3 py-2 w-full outline-none focus:ring-1 focus:ring-gray-200"
+                className="border border-gray-200 rounded-lg pl-9 pr-10 py-2 w-full outline-none focus:ring-1 focus:ring-gray-200"
               />
-              <Eye className="absolute -translate-y-1/2 right-3 top-1/2"/>
+
+              {isShowPassword ? (
+                <EyeOff
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black cursor-pointer"
+                  onClick={handleViewPassword}
+                />
+              ) : (
+                <Eye
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black cursor-pointer"
+                  onClick={handleViewPassword}
+                />
+              )}
             </div>
 
             {errors.password && (
-              <span className="text-black text-xs">
+              <span className="text-red-500 text-xs">
                 {errors.password.message}
               </span>
             )}
