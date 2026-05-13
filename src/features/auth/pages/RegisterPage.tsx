@@ -1,16 +1,15 @@
 import { useForm } from "react-hook-form";
-import type { LoginUserInput } from "../types";
-import { Lock, Eye, EyeOff } from "lucide-react";
+import type { LoginUserInput, UserRegisterInput } from "../types";
+import { Lock, Eye, EyeOff, Mail, User } from "lucide-react";
 import { useState } from "react";
-import { useLogin } from "../hooks/useLogin";
+import { useRegister } from "../hooks/useRegister";
 import { useNavigate } from "react-router";
-const LoginPage = () => {
-
-  const navigate = useNavigate()
+const RegisterPage = () => {
+  const navigate = useNavigate();
   // states
   const [isShowPassword, setShowPassword] = useState<Boolean>(false);
 
-  const loginMutation = useLogin();
+  const registerMutation = useRegister();
 
   const {
     register,
@@ -20,13 +19,14 @@ const LoginPage = () => {
     defaultValues: {
       email: "",
       password: "",
+      name: ""
     },
   });
 
-  const onSubmit = async (data: LoginUserInput) => {
-    loginMutation.mutate(data, {
-      onSuccess: (data) => {
-        localStorage.setItem("token", data.accessToken);
+  const onSubmit = async (data: UserRegisterInput) => {
+    registerMutation.mutate(data, {
+      onSuccess: () => {
+        navigate("/login")
       },
     });
   };
@@ -36,8 +36,8 @@ const LoginPage = () => {
   };
 
   return (
-    <main className="flex justify-center items-center h-screen bg-[#e1eafa] px-4 md:px-0">
-      <section className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
+    <main className="flex justify-center h-screen bg-[#e1eafa] px-4 md:px-0">
+      <section className=" max-w-md bg-white rounded-2xl shadow-lg p-8 max-h-max mt-4">
         <h1 className="text-xl font-bold text-center mt-2">
           Sign in to WorksyHub
         </h1>
@@ -47,15 +47,41 @@ const LoginPage = () => {
         </p>
 
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
+          {/* Name */}
+          <div className="flex flex-col gap-1">
+            <label className="text-sm font-medium">Name</label>
+
+            <div className="relative w-full">
+              {/* Prefix */}
+              <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black" />
+
+              <input
+                type="text"
+                placeholder="John Doe"
+                {...register("name", {
+                  required: "Name is required",
+                  maxLength: {
+                    value: 100,
+                    message: "Name max character length is 100",
+                  }
+                })}
+                className="border border-gray-200 rounded-lg pl-8 pr-3 py-2 w-full outline-none focus:ring-1 focus:ring-gray-200"
+              />
+            </div>
+
+            {errors.name && (
+              <span className="text-red-500 text-xs">
+                {errors.name.message}
+              </span>
+            )}
+          </div>
           {/* Email */}
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium">Email address</label>
 
             <div className="relative w-full">
               {/* Prefix */}
-              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-                @
-              </div>
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-black" />
 
               <input
                 type="email"
@@ -82,9 +108,6 @@ const LoginPage = () => {
           <div className="flex flex-col gap-1">
             <div className="flex justify-between">
               <label className="text-sm font-medium">Password</label>
-              <p className="text-sm text-blue-800 font-medium cursor-pointer">
-                Forgot Password?
-              </p>
             </div>
 
             <div className="relative w-full">
@@ -128,18 +151,27 @@ const LoginPage = () => {
             disabled={isSubmitting}
             className="bg-blue-600 text-white py-2 rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50 cursor-pointer"
           >
-            {isSubmitting ? "Signing in..." : "Sign In"}
+            {isSubmitting ? "Creating..." : "Create Account"}
           </button>
         </form>
-          
+        <div className="text-center flex justify-center mt-4">
+          <p className="text-gray-400 font-medium text-xs w-2/3">By clicking "Create Account", you agree to our <span className="text-blue-500">Terms</span> and <span className="text-blue-500">Privacy Policy</span></p>
+        </div>
         <div className="w-full border mt-5 border-gray-100"></div>
         <section className="text-center mt-5">
-          <p className="text-sm">Don't have an account? <span className="text-blue-500 cursor-pointer" onClick={() => navigate("/register")}>Register here</span></p>
+          <p className="text-sm">
+            Already have an account?{" "}
+            <span
+              className="text-blue-500 cursor-pointer"
+              onClick={() => navigate("/login")}
+            >
+              Sign In
+            </span>
+          </p>
         </section>
-
       </section>
     </main>
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

@@ -1,8 +1,8 @@
 import { api } from "../../../lib/appClient";
-import type { LoginUserInput } from "../pages/types";
+import type { LoginUserInput } from "../types";
 
-export const login = async(data: LoginUserInput) => {
-  const response = await api.post("/api/v1/auth/", data)
+export const login = async (data: LoginUserInput) => {
+  const response = await api.post("/api/v1/auth/", data);
 
-  return response.data
-}
+  return response.data;
+};
