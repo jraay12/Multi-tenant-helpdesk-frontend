@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import type { LoginUserInput, UserRegisterInput } from "../types";
+import type { UserRegisterInput } from "../types";
 import { Lock, Eye, EyeOff, Mail, User } from "lucide-react";
 import { useState } from "react";
 import { useRegister } from "../hooks/useRegister";
