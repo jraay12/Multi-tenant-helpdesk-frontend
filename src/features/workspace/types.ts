@@ -9,3 +9,15 @@ export interface MyWorkspaceResponse {
     members: string;
   };
 }
+
+export interface MyWorkspaceResponseById {
+  workspace: {
+        id: string,
+        name: string,
+        description: string | null,
+        slug: string,
+        createdAt: Date,
+        updatedAt: Date
+    },
+    role: string
+}

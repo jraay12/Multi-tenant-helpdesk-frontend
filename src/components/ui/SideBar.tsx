@@ -10,10 +10,13 @@ import {
   Moon,
   WorkflowIcon,
 } from "lucide-react";
+import { useFetchMyWorkspaceById } from "../../features/workspace/hooks/useFetchMyWorkspaceById";
 import { useNavigate } from "react-router";
 
 const SideBar = () => {
   const [active, setActive] = useState("dashboard");
+  const activeWorkspaceId = localStorage.getItem("workspace")
+  const {data} = useFetchMyWorkspaceById(activeWorkspaceId!) 
   const navigate = useNavigate();
   const menus = [
     {
@@ -34,7 +37,7 @@ const SideBar = () => {
       {/* Logo */}
       <div className="mb-10">
         <h1 className="font-bold text-2xl text-center text-white tracking-wide">
-          ResolvDesk
+          {data?.workspace.name}
         </h1>
       </div>
 
