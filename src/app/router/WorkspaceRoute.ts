@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router";
 
-export default function ProtectedRoute({
+export default function WorkspaceRoute({
   children,
 }: {
   children: React.ReactNode;
@@ -16,13 +16,13 @@ export default function ProtectedRoute({
       return;
     }
 
-    if (!workspaceId) {
-      navigate("/workspace", { replace: true });
+    if (workspaceId) {
+      navigate("/", { replace: true });
     }
   }, [token, workspaceId, navigate]);
 
   if (!token) return null;
-  if (!workspaceId) return null;
+  if (workspaceId) return null;
 
-  return children
+  return children;
 }

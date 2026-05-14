@@ -14,7 +14,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-axios.interceptors.response.use(
+api.interceptors.response.use(
   (res) => res,
   (error) => {
     if (error.response?.status === 401) {

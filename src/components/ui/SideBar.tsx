@@ -8,6 +8,7 @@ import {
   Settings,
   LifeBuoy,
   Moon,
+  WorkflowIcon
 } from "lucide-react";
 
 const SideBar = () => {
@@ -19,6 +20,7 @@ const SideBar = () => {
     { label: "Customers", value: "customers", icon: Users },
     { label: "Members", value: "members", icon: UserRound },
     { label: "Settings", value: "settings", icon: Settings },
+    { label: "Workspace", value: "workspace", icon: WorkflowIcon },
   ];
 
   return (
@@ -26,7 +28,7 @@ const SideBar = () => {
       {/* Logo */}
       <div className="mb-10">
         <h1 className="font-bold text-2xl text-center text-white tracking-wide">
-          WorksyHub
+          ResolvDesk
         </h1>
       </div>
 
@@ -58,7 +60,7 @@ const SideBar = () => {
       {/* Bottom actions */}
       <div className="px-4 flex flex-col gap-2">
         <div className="text-center">
-          <Button button_name="+ New Ticket" />
+          <Button button_name="Invite Team" />
         </div>
 
         <div className="border-t border-white/10 mt-2 pt-2 flex flex-col gap-1">

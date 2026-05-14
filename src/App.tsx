@@ -6,6 +6,8 @@ import ProtectedRoute from "./app/router/ProtectedRoutes";
 import PublicRoute from "./app/router/PublicRoutes";
 import DashboardPage from "./features/dashboard/pages/DashboardPage";
 import AppLayout from "./app/layout/AppLayout";
+import WorkPageSelection from "./features/workspace/pages/WorkPageSelection";
+import WorkspaceRoute from "./app/router/WorkspaceRoute";
 function App() {
   return (
     <Routes>
@@ -24,6 +26,15 @@ function App() {
           <PublicRoute>
             <RegisterPage />
           </PublicRoute>
+        }
+      />
+
+      <Route
+        path="/workspace"
+        element={
+          <WorkspaceRoute>
+            <WorkPageSelection />
+          </WorkspaceRoute>
         }
       />
 
