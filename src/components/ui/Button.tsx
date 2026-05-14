@@ -4,9 +4,7 @@ type ButtonProps = {
 
 const Button = ({ button_name }: ButtonProps) => {
   return (
-    <div className="px-3 bg-blue-500 rounded-sm py-1 text-white cursor-pointer">
-      {button_name}
-    </div>
+    <button className="bg-blue-900 px-4 rounded-lg text-white text-xs font-medium h-10 w-full">{button_name}</button>
   );
 };
 
