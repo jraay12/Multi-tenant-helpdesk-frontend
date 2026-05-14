@@ -2,10 +2,12 @@ import { Bell, User2, HelpCircleIcon, InfoIcon } from "lucide-react";
 import Button from "./Button";
 import SearchComponent from "./Search";
 import { useLocation } from "react-router";
-
+import { useFetchMyWorkspaceById } from "../../features/workspace/hooks/useFetchMyWorkspaceById";
 const Header = () => {
   const location = useLocation();
+  const activeWorkspaceId = localStorage.getItem("workspace")
 
+  const {data} = useFetchMyWorkspaceById(activeWorkspaceId!)
   return (
     <div className="border-b border-gray-300 px-4 py-2 flex items-center justify-between">
       {/* Left */}
@@ -33,9 +35,9 @@ const Header = () => {
             <div className="border-l border-gray-400 w-4 h-10"></div>
             <div className="flex items-center gap-4">
               <User2 />
-              <div className="flex-col flex w-30 text-center">
+              <div className="flex-col flex w-30 text-center font-medium">
                 <h1 className="text-x1s">Alex Rivera</h1>
-                <p className="text-xs">LEAD ARCHITECT</p>
+                <p className="text-xs ">{data?.role}</p>
               </div>
             </div>
           </div>
