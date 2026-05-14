@@ -5,7 +5,7 @@ import { useLocation } from "react-router";
 
 const Header = () => {
   const location = useLocation();
-  
+
   return (
     <div className="border-b border-gray-300 px-4 py-2 flex items-center justify-between">
       {/* Left */}
@@ -15,7 +15,7 @@ const Header = () => {
         </div>
       )}
 
-      {location.pathname === "/" && (
+      {location.pathname !== "/workspace" && (
         <>
           <div className="w-1/3">
             <SearchComponent placeholder="Search tickets, customer, or internat docs..." />

@@ -8,15 +8,21 @@ import {
   Settings,
   LifeBuoy,
   Moon,
-  WorkflowIcon
+  WorkflowIcon,
 } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const SideBar = () => {
   const [active, setActive] = useState("dashboard");
-
+  const navigate = useNavigate();
   const menus = [
-    { label: "Dashboard", value: "dashboard", icon: LayoutDashboard },
-    { label: "Ticket Queue", value: "tickets", icon: Ticket },
+    {
+      label: "Dashboard",
+      value: "dashboard",
+      icon: LayoutDashboard,
+      path: "/",
+    },
+    { label: "Ticket Queue", value: "tickets", icon: Ticket, path: "/tickets" },
     { label: "Customers", value: "customers", icon: Users },
     { label: "Members", value: "members", icon: UserRound },
     { label: "Settings", value: "settings", icon: Settings },
@@ -40,7 +46,10 @@ const SideBar = () => {
           return (
             <button
               key={item.value}
-              onClick={() => setActive(item.value)}
+              onClick={() => {
+                setActive(item.value);
+                navigate(`${item.path}`);
+              }}
               className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
                 active === item.value
                   ? "bg-[#206ee3] text-white shadow-md"
