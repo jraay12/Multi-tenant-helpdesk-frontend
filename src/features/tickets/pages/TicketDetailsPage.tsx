@@ -302,6 +302,7 @@ const TicketDetailsPage = () => {
       <AssignTicketModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
+        ticketDetails={data}
       />
     </div>
   );
