@@ -152,7 +152,7 @@ const TicketPage = () => {
                     </span>
                   </td>
 
-                  <td className="px-6 py-4">{ticket.assignedTo.name}</td>
+                  <td className="px-6 py-4">{ticket?.assignedTo?.name ? ticket.assignedTo.name : <span className=" italic text-gray-400">Unassigned</span>}</td>
                 </tr>
               ))}
             </tbody>
