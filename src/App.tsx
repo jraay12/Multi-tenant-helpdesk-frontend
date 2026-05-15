@@ -9,6 +9,7 @@ import AppLayout from "./app/layout/AppLayout";
 import WorkPageSelection from "./features/workspace/pages/WorkPageSelection";
 import WorkspaceRoute from "./app/router/WorkspaceRoute";
 import TicketPage from "./features/tickets/pages/TicketPage";
+import TicketDetailsPage from "./features/tickets/pages/TicketDetailsPage";
 function App() {
   return (
     <Routes>
@@ -49,6 +50,7 @@ function App() {
       >
         <Route index element={<DashboardPage />} />
         <Route path="/tickets" element={<TicketPage />} />
+        <Route path="/tickets/:id" element={<TicketDetailsPage />} />
       </Route>
     </Routes>
   );
