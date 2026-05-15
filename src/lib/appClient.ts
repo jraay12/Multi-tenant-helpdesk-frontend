@@ -6,9 +6,14 @@ export const api = axios.create({
 
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
+  const workspaceId = localStorage.getItem("workspace")
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  if(workspaceId){
+    config.headers["x-workspace-id"] = workspaceId
   }
 
   return config;
