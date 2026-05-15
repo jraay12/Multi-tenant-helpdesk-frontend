@@ -11,13 +11,15 @@ import {
   WorkflowIcon,
 } from "lucide-react";
 import { useFetchMyWorkspaceById } from "../../features/workspace/hooks/useFetchMyWorkspaceById";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 
 const SideBar = () => {
-  const [active, setActive] = useState("dashboard");
-  const activeWorkspaceId = localStorage.getItem("workspace")
-  const {data} = useFetchMyWorkspaceById(activeWorkspaceId!) 
   const navigate = useNavigate();
+  const location = useLocation();
+  const activeWorkspaceId = localStorage.getItem("workspace");
+
+  const { data } = useFetchMyWorkspaceById(activeWorkspaceId!);
+
   const menus = [
     {
       label: "Dashboard",
@@ -31,6 +33,11 @@ const SideBar = () => {
     { label: "Settings", value: "settings", icon: Settings },
     { label: "Workspace", value: "workspace", icon: WorkflowIcon },
   ];
+
+  const isActive = (path?: string) => {
+    if (!path) return false;
+    return location.pathname === path;
+  };
 
   return (
     <div className="w-full h-screen bg-[#213145] py-6 flex flex-col">
@@ -49,12 +56,9 @@ const SideBar = () => {
           return (
             <button
               key={item.value}
-              onClick={() => {
-                setActive(item.value);
-                navigate(`${item.path}`);
-              }}
+              onClick={() => navigate(`${item.path}`)}
               className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
-                active === item.value
+                isActive(item.path)
                   ? "bg-[#206ee3] text-white shadow-md"
                   : "text-white/80 hover:bg-[#2b3f5a] hover:text-white"
               }`}
@@ -72,7 +76,7 @@ const SideBar = () => {
       {/* Bottom actions */}
       <div className="px-4 flex flex-col gap-2">
         <div className="text-center">
-          <Button button_name="Invite Team" />
+          <Button button_name="Invite Team" onClick={() => null} />
         </div>
 
         <div className="border-t border-white/10 mt-2 pt-2 flex flex-col gap-1">
