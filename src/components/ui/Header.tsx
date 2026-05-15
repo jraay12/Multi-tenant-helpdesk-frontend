@@ -3,7 +3,11 @@ import Button from "./Button";
 import SearchComponent from "./Search";
 import { useLocation } from "react-router";
 import { useFetchMyWorkspaceById } from "../../features/workspace/hooks/useFetchMyWorkspaceById";
-const Header = () => {
+
+type HeaderProps = {
+  onClick: () => void
+}
+const Header = (props: HeaderProps) => {
   const location = useLocation();
   const activeWorkspaceId = localStorage.getItem("workspace")
 
@@ -24,7 +28,7 @@ const Header = () => {
           </div>
 
           <div className="flex gap-5 items-center">
-            <Button button_name="Create Ticket" />
+            <Button button_name="Create Ticket" onClick={props.onClick} />
             <div className="border border-gray-300 rounded-full cursor-pointer">
               <Bell className="p-1 w-6 h-6" />
             </div>

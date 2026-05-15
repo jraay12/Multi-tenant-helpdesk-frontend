@@ -1,8 +1,11 @@
 import { Outlet } from "react-router";
 import Header from "../../components/ui/Header";
 import SideBar from "../../components/ui/SideBar";
-
+import TicketDrawer from "../../components/TicketDrawer";
+import { useState } from "react";
 const AppLayout = () => {
+  const [isTicketOpen, setIsTicketOpen] = useState<boolean>(false);
+
   return (
     <div className="h-screen grid grid-cols-[240px_1fr] grid-rows-[60px_1fr]">
       {/* Sidebar */}
@@ -11,12 +14,17 @@ const AppLayout = () => {
       </aside>
 
       {/* Header */}
-      <Header />
+      <Header onClick={() => setIsTicketOpen(true)} />
 
       {/* Main Content */}
       <main className="p-4 overflow-auto">
         <Outlet />
       </main>
+
+      <TicketDrawer
+        open={isTicketOpen}
+        onClose={() => setIsTicketOpen(false)}
+      />
     </div>
   );
 };
