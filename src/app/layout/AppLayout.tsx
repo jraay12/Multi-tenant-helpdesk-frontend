@@ -1,7 +1,7 @@
 import { Outlet } from "react-router";
 import Header from "../../components/ui/Header";
 import SideBar from "../../components/ui/SideBar";
-import TicketDrawer from "../../components/TicketDrawer";
+import TicketDrawer from "../../components/ui/TicketDrawer";
 import { useState } from "react";
 const AppLayout = () => {
   const [isTicketOpen, setIsTicketOpen] = useState<boolean>(false);
