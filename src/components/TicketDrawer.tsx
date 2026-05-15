@@ -71,7 +71,7 @@ const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
                 <label className="text-sm">PRIORITY</label>
                 <select
                   {...register("priority")}
-                  className="w-full mt-1 border rounded-md px-3 outline-none border-gray-300 py-2 text-sm"
+                  className="w-full mt-1 border rounded-md px-3 outline-none border-gray-300 py-2 text-sm bg-[#f2f3fc]"
                 >
                   <option value="LOW">LOW</option>
                   <option value="MEDIUM">MEDIUM</option>
@@ -84,7 +84,7 @@ const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
                 <label className="text-sm ">CATEGORY</label>
                 <input
                   {...register("category", { required: true })}
-                  className="w-full mt-1 border border-gray-300 outline-none rounded-md px-3 py-2 text-sm"
+                  className="w-full mt-1 border border-gray-300 outline-none rounded-md px-3 py-2 text-sm bg-[#f2f3fc]"
                   placeholder="e.g. Authentication"
                 />
               </div>
@@ -95,7 +95,7 @@ const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
               <label className="text-sm ">DESCRIPTION</label>
               <textarea
                 {...register("description", { required: true })}
-                className="w-full mt-1 border rounded-md outline-none border-gray-300 px-3 py-2 text-sm min-h-[100px]"
+                className="w-full mt-1 border rounded-md outline-none border-gray-300 px-3 py-2 text-sm min-h-25 bg-[#f2f3fc]"
                 placeholder="Detailed explaination of the request..."
               />
             </div>
