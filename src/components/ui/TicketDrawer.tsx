@@ -11,6 +11,7 @@ type TicketForm = {
   description: string;
   priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT" ;
   category: string;
+  customer_name: string
 };
 
 const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
@@ -25,6 +26,7 @@ const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
       category: "",
       description: "",
       priority: "LOW",
+      customer_name: ""
     },
   });
 
@@ -90,6 +92,23 @@ const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
               {errors.title && (
                 <span className="text-red-500 text-xs ">
                   {errors.title.message}
+                </span>
+              )}
+            </div>
+
+            {/* Customer Name */}
+            <div>
+              <label className="text-sm ">CUSTOMER NAME</label>
+              <input
+                {...register("customer_name", {
+                  required: "Customer Name is required",
+                })}
+                className="w-full mt-1 border outline-none border-gray-300 rounded-md px-3 py-2 text-sm bg-[#f2f3fc]"
+                placeholder="John Doe"
+              />
+              {errors.customer_name && (
+                <span className="text-red-500 text-xs ">
+                  {errors.customer_name.message}
                 </span>
               )}
             </div>
