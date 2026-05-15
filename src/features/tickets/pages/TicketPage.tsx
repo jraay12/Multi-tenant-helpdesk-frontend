@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useGetTickets } from "../hooks/useGetTickets";
+import { useNavigate } from "react-router";
 const TicketPage = () => {
   const {data: tickets} = useGetTickets()
-
+  const navigate = useNavigate()
   const [statusFilter, setStatusFilter] = useState("");
   const [priorityFilter, setPriorityFilter] = useState("");
   const [assigneeFilter, setAssigneeFilter] = useState("");
@@ -118,7 +119,7 @@ const TicketPage = () => {
               {filteredTickets?.map((ticket) => (
                 <tr
                   key={ticket.id}
-                  className="border-t border-gray-100 hover:bg-gray-50 transition"
+                  className="border-t border-gray-100 hover:bg-gray-50 transition cursor-pointer" onClick={() => navigate(`/tickets/${ticket.id}`)}
                 >
 
                   <td className="flex flex-col px-6 py-4  max-w-96">
