@@ -1,20 +1,17 @@
-export interface TicketStatisticResponse {
-  OPEN: {
-    total: number;
-    today: number;
-  };
+// types.ts
 
-  IN_PROGRESS: {
-    total: number;
-    today: number;
-  };
+export type TicketStatus =
+  | "OPEN"
+  | "IN_PROGRESS"
+  | "RESOLVED"
+  | "CLOSED";
 
-  RESOLVED: {
-    total: number;
-    thisWeek: number;
-  };
+export type TicketStatisticItem = {
+  total: number;
+  today?: number;
+  thisWeek?: number;
+};
 
-  CLOSED: {
-    total: number;
-  };
-}
+export type TicketStatisticResponse = {
+  data: Record<TicketStatus, TicketStatisticItem>;
+};
