@@ -25,7 +25,7 @@ const Header = (props: HeaderProps) => {
   const isTicketDetails = !!id;
 
   return (
-    <div className="border-b border-gray-300 px-4 py-2 flex items-center justify-between">
+    <div className="border-b border-gray-300 px-4 py-2 flex items-center justify-start lg:justify-between">
       {/* LEFT SIDE */}
       {isWorkspacePage ? (
         <div className="flex gap-6 items-center">
@@ -45,15 +45,13 @@ const Header = (props: HeaderProps) => {
               </button>
               <div className="border-r border-gray-400 w-2 h-10"></div>
 
-              <h1 className="text-lg font-semibold">
-                {ticket?.title ?? ""}
-              </h1>
+              <h1 className="text-lg font-semibold">{ticket?.title ?? ""}</h1>
             </>
           ) : (
             <>
               {/* SEARCH (LIST PAGE ONLY) */}
-              <div className="w-96">
-                <SearchComponent placeholder="Search tickets, customer, or internal docs..." />
+              <div className="md:w-40 lg:w-80 hidden lg:block">
+                <SearchComponent placeholder="Search tickets" />
               </div>
             </>
           )}
@@ -67,20 +65,23 @@ const Header = (props: HeaderProps) => {
           <div className="h-7 w-7 cursor-pointer rounded-full bg-black"></div>
         </div>
       ) : (
-        <div className="flex gap-5 items-center">
-          <Button button_name="Create Ticket" onClick={props.onClick} />
+        <div className="flex gap-5 items-center w-full lg:w-max justify-between lg:justify-start">
+          <h1 className="lg:hidden text-[18px] font-medium">ResolvDesk</h1>
+          <div>
+            <Button button_name="Create Ticket" onClick={props.onClick} />{" "}
+          </div>
 
-          <div className="border border-gray-300 rounded-full cursor-pointer">
+          <div className="hidden lg:block border border-gray-300 rounded-full cursor-pointer">
             <Bell className="p-1 w-6 h-6" />
           </div>
 
-          <div className="border border-gray-300 rounded-full cursor-pointer">
+          <div className="hidden lg:block border border-gray-300 rounded-full cursor-pointer">
             <InfoIcon className="p-1 w-6 h-6" />
           </div>
 
-          <div className="border-l border-gray-400 w-4 h-10"></div>
+          <div className="hidden lg:block border-l border-gray-400 w-4 h-10"></div>
 
-          <div className="flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-4">
             <User2 />
             <div className="flex flex-col w-30 text-center font-medium">
               <h1 className="text-xs">Alex Rivera</h1>

@@ -9,7 +9,7 @@ const DashboardPage = () => {
   const { data: recentTickets } = useRecentTickets();
 
   return (
-    <div className="p-7 bg-[#F6F7F9] min-h-screen overflow-scroll max-h-screen ">
+    <div className="p-7 bg-[#F6F7F9] min-h-screen overflow-scroll max-h-screen">
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
         {stats &&

@@ -1,17 +1,14 @@
-import { useState } from "react";
-import Button from "./Button";
+import { useFetchMyWorkspaceById } from "../../features/workspace/hooks/useFetchMyWorkspaceById";
+import { useNavigate, useLocation } from "react-router";
 import {
   LayoutDashboard,
   Ticket,
+  Bell,
   Users,
-  UserRound,
+  BarChart3,
+  Activity,
   Settings,
-  LifeBuoy,
-  Moon,
-  WorkflowIcon,
 } from "lucide-react";
-import { useFetchMyWorkspaceById } from "../../features/workspace/hooks/useFetchMyWorkspaceById";
-import { useNavigate, useLocation } from "react-router";
 
 const SideBar = () => {
   const navigate = useNavigate();
@@ -20,18 +17,63 @@ const SideBar = () => {
 
   const { data } = useFetchMyWorkspaceById(activeWorkspaceId!);
 
-  const menus = [
+  const updatedMenu = [
     {
-      label: "Dashboard",
-      value: "dashboard",
-      icon: LayoutDashboard,
-      path: "/",
+      MAIN: [
+        {
+          label: "Dashboard",
+          value: "dashboard",
+          icon: LayoutDashboard,
+          path: "/",
+        },
+        {
+          label: "All Tickets",
+          value: "alltickets",
+          icon: Ticket,
+          path: "/tickets",
+        },
+        {
+          label: "My Tickets",
+          value: "myticket",
+          icon: Ticket,
+          path: "/my-ticket",
+        },
+        {
+          label: "Notifications",
+          value: "notification",
+          icon: Bell,
+          path: "/notifications",
+        },
+      ],
+      MANAGE: [
+        {
+          label: "Team",
+          value: "team",
+          icon: Users,
+          path: "/team",
+        },
+        {
+          label: "Analytics",
+          value: "analytics",
+          icon: BarChart3,
+          path: "/analytics",
+        },
+        {
+          label: "Activity log",
+          value: "activitylog",
+          icon: Activity,
+          path: "/activity",
+        },
+      ],
+      CONFIG: [
+        {
+          label: "Workspace",
+          value: "workspace",
+          icon: Settings,
+          path: "/workspace",
+        },
+      ],
     },
-    { label: "Ticket Queue", value: "tickets", icon: Ticket, path: "/tickets" },
-    { label: "Customers", value: "customers", icon: Users },
-    { label: "Members", value: "members", icon: UserRound },
-    { label: "Settings", value: "settings", icon: Settings },
-    { label: "Workspace", value: "workspace", icon: WorkflowIcon },
   ];
 
   const isActive = (path?: string) => {
@@ -40,56 +82,43 @@ const SideBar = () => {
   };
 
   return (
-    <div className="hidden w-full h-screen bg-[#213145] py-6 md:flex flex-col">
+    <div className="hidden w-full h-screen bg-[#FAFAFA] py-6 md:flex flex-col">
       {/* Logo */}
       <div className="mb-10">
-        <h1 className="font-bold text-2xl text-center text-white tracking-wide">
+        <h1 className="font-bold text-2xl text-center text-black tracking-wide hidden lg:block">
           {data?.workspace.name}
         </h1>
       </div>
 
-      {/* Menu */}
-      <div className="flex flex-col gap-2 px-4">
-        {menus.map((item) => {
-          const Icon = item.icon;
+      <div className="flex flex-col gap-5 px-4">
+        {updatedMenu.map((updatedMenu) =>
+          Object.entries(updatedMenu).map(([key, value]) => (
+            <div key={key} className="space-y-2">
+              <h1 className="hidden lg:block font-bold text-xs text-black/40">{key}</h1>
 
-          return (
-            <button
-              key={item.value}
-              onClick={() => navigate(`${item.path}`)}
-              className={`flex items-center gap-3 px-4 py-2 rounded-md text-sm font-medium transition-all duration-200 cursor-pointer ${
-                isActive(item.path)
-                  ? "bg-[#206ee3] text-white shadow-md"
-                  : "text-white/80 hover:bg-[#2b3f5a] hover:text-white"
-              }`}
-            >
-              <Icon className="w-4 h-4" />
-              {item.label}
-            </button>
-          );
-        })}
-      </div>
+              <div className="space-y-2">
+                {value.map((item) => {
+                  const Icon = item.icon;
 
-      {/* Spacer */}
-      <div className="grow"></div>
-
-      {/* Bottom actions */}
-      <div className="px-4 flex flex-col gap-2">
-        <div className="text-center">
-          <Button button_name="Invite Team" onClick={() => null} />
-        </div>
-
-        <div className="border-t border-white/10 mt-2 pt-2 flex flex-col gap-1">
-          <button className="flex items-center gap-2 text-white/80 hover:text-white text-sm px-2 py-2 rounded-md hover:bg-[#2b3f5a]">
-            <LifeBuoy className="w-4 h-4" />
-            Support
-          </button>
-
-          <button className="flex items-center gap-2 text-white/80 hover:text-white text-sm px-2 py-2 rounded-md hover:bg-[#2b3f5a]">
-            <Moon className="w-4 h-4" />
-            Dark Mode
-          </button>
-        </div>
+                  return (
+                    <button
+                      key={item.value}
+                      onClick={() => navigate(item.path)}
+                      className={`flex items-center gap-3 px-4 py-2 rounded-md w-full text-sm font-medium transition-all duration-200 cursor-pointer ${
+                        isActive(item.path)
+                          ? "text-[#4F46E5] bg-[#EEF2FF]"
+                          : "text-black/70 hover:bg-[#EEF2FF]"
+                      }`}
+                    >
+                      <Icon size={18} />
+                      <span className="hidden lg:block">{item.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )),
+        )}
       </div>
     </div>
   );
