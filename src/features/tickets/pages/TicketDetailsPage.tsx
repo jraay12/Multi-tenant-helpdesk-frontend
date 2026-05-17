@@ -1,6 +1,7 @@
 import { useParams } from "react-router";
 import { useGetTicketById } from "../hooks/useGetTicketsById";
 import { useUpdateTicketStatus } from "../hooks/useUpdateTicketStatus";
+import { useUpdateTicketPriority } from "../hooks/useUpdateTicketPriority";
 import TicketNotFound from "../../../components/ui/TicketNotFound";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
@@ -61,7 +62,9 @@ const TicketDetailsPage = () => {
   const { register, handleSubmit, reset, watch } = useForm<TicketForm>();
   const currentStatus = watch("status");
   const currentPriority = watch("priority");
-  const updateTicketMutation = useUpdateTicketStatus();
+  const updateTicketStatusMutation = useUpdateTicketStatus();
+  const updateTicketPriorityMutation = useUpdateTicketPriority();
+  const isClosed = currentStatus === "CLOSED";
 
   useEffect(() => {
     if (data) reset({ priority: data.priority, status: data.status });
@@ -81,7 +84,11 @@ const TicketDetailsPage = () => {
   if (isError || !data) return <TicketNotFound />;
 
   const handleUpdateStatus = (value: TicketForm["status"]) => {
-    updateTicketMutation.mutate({ status: value, ticketId: id! });
+    updateTicketStatusMutation.mutate({ status: value, ticketId: id! });
+  };
+
+  const handleUpdatePriority = (value: TicketForm["priority"]) => {
+    updateTicketPriorityMutation.mutate({ priority: value, ticketId: id! });
   };
 
   const RightPanel = () => (
@@ -122,8 +129,10 @@ const TicketDetailsPage = () => {
               {...register("status", {
                 onChange: (e) => handleUpdateStatus(e.target.value),
               })}
-              className="w-full appearance-none border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 outline-none bg-white
-                focus:border-indigo-300 focus:ring-2 focus:ring-[#d9e1fc] transition-all pr-8 cursor-pointer"
+              disabled={isClosed}
+              className={`w-full appearance-none border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 outline-none bg-white
+    focus:border-indigo-300 focus:ring-2 focus:ring-[#d9e1fc] transition-all pr-8
+    ${isClosed ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
             >
               <option value="OPEN">Open</option>
               <option value="IN_PROGRESS">In Progress</option>
@@ -144,9 +153,13 @@ const TicketDetailsPage = () => {
           </label>
           <div className="relative">
             <select
-              {...register("priority")}
-              className="w-full appearance-none border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 outline-none bg-white
-                focus:border-indigo-300 focus:ring-2 focus:ring-[#d9e1fc] transition-all pr-8 cursor-pointer"
+              {...register("priority", {
+                onChange: (e) => handleUpdatePriority(e.target.value),
+              })}
+              disabled={isClosed}
+              className={`w-full appearance-none border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 outline-none bg-white
+    focus:border-indigo-300 focus:ring-2 focus:ring-[#d9e1fc] transition-all pr-8
+    ${isClosed ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
             >
               <option value="LOW">Low</option>
               <option value="MEDIUM">Medium</option>
