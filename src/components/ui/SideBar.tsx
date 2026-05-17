@@ -40,7 +40,7 @@ const SideBar = () => {
   };
 
   return (
-    <div className="w-full h-screen bg-[#213145] py-6 flex flex-col">
+    <div className="hidden w-full h-screen bg-[#213145] py-6 md:flex flex-col">
       {/* Logo */}
       <div className="mb-10">
         <h1 className="font-bold text-2xl text-center text-white tracking-wide">

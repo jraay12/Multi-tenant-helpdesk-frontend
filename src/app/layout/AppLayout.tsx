@@ -7,9 +7,9 @@ const AppLayout = () => {
   const [isTicketOpen, setIsTicketOpen] = useState<boolean>(false);
 
   return (
-    <div className="h-screen grid grid-cols-[240px_1fr] grid-rows-[60px_1fr] overflow-hidden">
+    <div className="h-screen grid grid-cols-1 md:grid-cols-[240px_1fr] grid-rows-[60px_1fr] ">
       {/* Sidebar */}
-      <aside className="row-span-2 border-r">
+      <aside className="hidden md:block row-span-2 border-r">
         <SideBar />
       </aside>
 
