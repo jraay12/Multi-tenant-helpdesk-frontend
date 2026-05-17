@@ -1,5 +1,6 @@
 import { useParams } from "react-router";
 import { useGetTicketById } from "../hooks/useGetTicketsById";
+import { useUpdateTicketStatus } from "../hooks/useUpdateTicketStatus";
 import TicketNotFound from "../../../components/ui/TicketNotFound";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
@@ -60,6 +61,7 @@ const TicketDetailsPage = () => {
   const { register, handleSubmit, reset, watch } = useForm<TicketForm>();
   const currentStatus = watch("status");
   const currentPriority = watch("priority");
+  const updateTicketMutation = useUpdateTicketStatus();
 
   useEffect(() => {
     if (data) reset({ priority: data.priority, status: data.status });
@@ -77,6 +79,10 @@ const TicketDetailsPage = () => {
   }
 
   if (isError || !data) return <TicketNotFound />;
+
+  const handleUpdateStatus = (value: TicketForm["status"]) => {
+    updateTicketMutation.mutate({ status: value, ticketId: id! });
+  };
 
   const RightPanel = () => (
     <div className="flex flex-col h-full overflow-y-auto">
@@ -113,7 +119,9 @@ const TicketDetailsPage = () => {
           </label>
           <div className="relative">
             <select
-              {...register("status")}
+              {...register("status", {
+                onChange: (e) => handleUpdateStatus(e.target.value),
+              })}
               className="w-full appearance-none border border-gray-200 rounded-lg px-3 py-2.5 text-sm text-gray-700 outline-none bg-white
                 focus:border-indigo-300 focus:ring-2 focus:ring-[#d9e1fc] transition-all pr-8 cursor-pointer"
             >
