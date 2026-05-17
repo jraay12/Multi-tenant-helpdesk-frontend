@@ -8,6 +8,7 @@ export const useCreateTicket = () => {
     mutationFn: CreateTicket,
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['ticket', workspaceId]})
+      queryClient.invalidateQueries({queryKey: ['dashboard-stats', workspaceId]})
     }
   });
 };
