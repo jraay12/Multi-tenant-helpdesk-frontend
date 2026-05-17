@@ -189,8 +189,14 @@ const TicketDetailsPage = () => {
             </label>
             <button
               type="button"
+              disabled={isClosed}
               onClick={() => setIsModalOpen(true)}
-              className="text-[11px] font-semibold text-indigo-500 hover:text-indigo-700 bg-[#d9e1fc] hover:bg-indigo-200 px-2.5 py-1 rounded-full transition-all"
+              className={`text-[11px] font-semibold px-2.5 py-1 rounded-full transition-all
+    ${
+      isClosed
+        ? "text-gray-400 bg-gray-100 cursor-not-allowed opacity-60"
+        : "text-indigo-500 hover:text-indigo-700 bg-[#d9e1fc] hover:bg-indigo-200"
+    }`}
             >
               {data?.assignedTo ? "Change" : "Assign"}
             </button>
