@@ -15,3 +15,17 @@ export type TicketStatisticItem = {
 export type TicketStatisticResponse = {
   data: Record<TicketStatus, TicketStatisticItem>;
 };
+
+export interface RecentTicketResponse {
+  id: string
+  title: string
+  status: string
+  category: string
+  customer_name: string
+  createAt: Date
+  priority: string
+  assignedTo: {
+    name: string
+  } | null
+  timeAgo: string
+}

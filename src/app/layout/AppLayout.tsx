@@ -7,7 +7,7 @@ const AppLayout = () => {
   const [isTicketOpen, setIsTicketOpen] = useState<boolean>(false);
 
   return (
-    <div className="h-screen grid grid-cols-1 md:grid-cols-[240px_1fr] grid-rows-[60px_1fr] ">
+    <div className="h-screen grid grid-cols-1 md:grid-cols-[240px_1fr] grid-rows-[60px_1fr] md:overflow-hidden">
       {/* Sidebar */}
       <aside className="hidden md:block row-span-2 border-r">
         <SideBar />
@@ -17,7 +17,7 @@ const AppLayout = () => {
       <Header onClick={() => setIsTicketOpen(true)} />
 
       {/* Main Content */}
-      <main>
+      <main className="flex flex-col ">
         <Outlet />
       </main>
 

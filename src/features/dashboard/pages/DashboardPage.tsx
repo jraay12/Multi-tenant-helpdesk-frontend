@@ -1,43 +1,119 @@
 // DashboardPage.tsx
+import RecentTicketTable from "../../../components/ui/RecentTicketTable";
 import StatsCard from "../../../components/ui/StatsCard";
+import { useRecentTickets } from "../hooks/useGetRecentTIcket";
 import { useDashboardStatistics } from "../hooks/useDashboardStatistics";
-const statsData = [
-  {
-    title: "OPEN",
-    total: 12,
-    today: 3,
-  },
-  {
-    title: "IN PROGRESS",
-    total: 7,
-    today: 1,
-  },
-  {
-    title: "RESOLVED",
-    total: 20,
-    percent: 85,
-  },
-  {
-    title: "CLOSED",
-    total: 30,
-  },
-];
 
 const DashboardPage = () => {
   const { data: stats } = useDashboardStatistics();
-  console.log(stats);
+  const { data: recentTickets } = useRecentTickets();
+
   return (
-    <div className="p-7 bg-[#F6F7F9] min-h-screen">
+    <div className="p-7 bg-[#F6F7F9] min-h-screen overflow-scroll max-h-screen ">
+      {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
         {stats &&
           Object.entries(stats).map(([key, value]) => (
             <StatsCard
+              key={key}
               total={value.total}
               title={key}
               today={value.today}
               percent={value.thisWeek}
             />
           ))}
+      </div>
+
+      {/* Overview */}
+      <h1 className="mt-10 font-medium text-xl">Dashboard Overview</h1>
+
+      {/* Dashboard Grid */}
+      <div className="mt-5 grid grid-cols-1 xl:grid-cols-12 gap-5 mb-10">
+        {/* Tickets This Week */}
+        <div className="xl:col-span-8 bg-white border border-gray-200 rounded-2xl p-5 shadow-sm min-h-[320px]">
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold text-lg">Tickets This Week</h2>
+
+            <button className="text-sm text-blue-600 hover:underline">
+              View Report
+            </button>
+          </div>
+
+          <div className="mt-5 h-[240px] rounded-xl border border-dashed border-gray-300 flex items-center justify-center text-gray-400">
+            Chart Placeholder
+          </div>
+        </div>
+
+        {/* Agent Performance */}
+        <div className="xl:col-span-4 bg-white border border-gray-200 rounded-2xl p-5 shadow-sm min-h-[320px]">
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold text-lg">Agent Performance</h2>
+
+            <button className="text-sm text-blue-600 hover:underline">
+              See All
+            </button>
+          </div>
+
+          <div className="mt-5 flex flex-col gap-4">
+            {[1, 2, 3, 4].map((item) => (
+              <div
+                key={item}
+                className="flex items-center justify-between p-3 rounded-xl border border-gray-200"
+              >
+                <div>
+                  <h3 className="font-medium">John Doe</h3>
+                  <p className="text-sm text-gray-500">24 Tickets Resolved</p>
+                </div>
+
+                <span className="text-sm font-medium text-green-600">+12%</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Recent Tickets */}
+        <div className="xl:col-span-7 min-h-[350px]">
+          <h1 className="font-medium mb-2 text-[18px]">Recent Tickets</h1>
+          <div className="space-y-3">
+            {recentTickets &&
+              recentTickets.map((ticket) => (
+                <RecentTicketTable
+                  category={ticket.category}
+                  customer_name={ticket.customer_name}
+                  priority={ticket.priority}
+                  status={ticket.status}
+                  timeAgo={ticket.timeAgo}
+                  title={ticket.title}
+                  key={ticket.id}
+                />
+              ))}
+          </div>
+        </div>
+
+        {/* Activity Log */}
+        <div className="xl:col-span-5 bg-white border border-gray-200 rounded-2xl p-5 shadow-sm min-h-[350px]">
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold text-lg">Activity Log</h2>
+
+            <button className="text-sm text-blue-600 hover:underline">
+              More
+            </button>
+          </div>
+
+          <div className="mt-5 flex flex-col gap-5">
+            {[1, 2, 3, 4, 5].map((item) => (
+              <div key={item} className="flex gap-3">
+                <div className="w-2 h-2 rounded-full bg-blue-500 mt-2" />
+
+                <div>
+                  <p className="text-sm font-medium">Ticket assigned to John</p>
+
+                  <p className="text-xs text-gray-500 mt-1">5 mins ago</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
