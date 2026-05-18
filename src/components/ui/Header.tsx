@@ -60,8 +60,7 @@ const Header = (props: HeaderProps) => {
 
       {/* RIGHT SIDE */}
       {isWorkspacePage ? (
-        <div className="flex items-center gap-3">
-          <HelpCircleIcon className="text-gray-500" />
+        <div className="flex items-center gap-3 justify-end w-full ">
           <div className="h-7 w-7 cursor-pointer rounded-full bg-black"></div>
         </div>
       ) : (
