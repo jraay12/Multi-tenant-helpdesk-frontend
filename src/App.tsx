@@ -10,6 +10,7 @@ import WorkPageSelection from "./features/workspace/pages/WorkPageSelection";
 import WorkspaceRoute from "./app/router/WorkspaceRoute";
 import TicketPage from "./features/tickets/pages/TicketPage";
 import TicketDetailsPage from "./features/tickets/pages/TicketDetailsPage";
+import WorkspaceCreation from "./components/ui/WorkspaceCreation";
 function App() {
   return (
     <Routes>
@@ -31,6 +32,14 @@ function App() {
         }
       />
 
+      <Route
+        path="/workspace/create"
+        element={
+          <WorkspaceRoute>
+            <WorkspaceCreation />
+          </WorkspaceRoute>
+        }
+      />
       <Route
         path="/workspace"
         element={

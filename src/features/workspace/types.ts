@@ -33,3 +33,9 @@ export interface WorkspaceMembers {
     email: string;
   };
 }
+
+
+export interface CreateWorkspaceInput {
+  name: string
+  description: string
+}

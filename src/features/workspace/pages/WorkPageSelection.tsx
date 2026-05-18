@@ -1,10 +1,10 @@
 import Header from "../../../components/ui/Header";
-import Button from "../../../components/ui/Button";
 import WorkspaceCard from "../../../components/ui/WorkspaceCard";
 import Footer from "../../../components/ui/Footer";
 import { useFetchMyWorkspace } from "../hooks/useFetchMyWorkspace";
 import { useNavigate } from "react-router";
-
+import { Plus } from "lucide-react";
+import WorkspaceCreation from "../../../components/ui/WorkspaceCreation";
 const WorkspacePageSelection = () => {
   const navigate = useNavigate();
   const activateWorkspaceId = localStorage.getItem("workspace");
@@ -32,7 +32,6 @@ const WorkspacePageSelection = () => {
       <Header onClick={() => null} />
 
       <main className="flex-1 px-6 py-10 max-w-6xl mx-auto w-full">
-
         {/* Page header */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-5">
           <div>
@@ -43,12 +42,9 @@ const WorkspacePageSelection = () => {
               Select your workspace
             </h1>
             <p className="mt-1.5 text-sm text-gray-500 max-w-md">
-              Choose an existing workspace or create a new one to start resolving tickets.
+              Choose an existing workspace or create a new one to start
+              resolving tickets.
             </p>
-          </div>
-
-          <div className="shrink-0">
-            <Button button_name="+ Create New Workspace" onClick={() => null} />
           </div>
         </div>
 
@@ -76,7 +72,13 @@ const WorkspacePageSelection = () => {
               <span className="text-2xl">📂</span>
             </div>
             <p className="text-gray-700 font-medium">No workspaces yet</p>
-            <p className="text-sm text-gray-400 mt-1">Create your first workspace to get started.</p>
+            <p className="text-sm text-gray-400 mt-1">
+              Create your first workspace to get started.
+            </p>
+            <button className="flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-md px-10 py-2 mx-auto mt-10 cursor-pointer text-sm font-medium transition-all duration-200 hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-600 hover:shadow-sm active:scale-[0.98]">
+              <Plus className="w-4 h-4" />
+              Create Workspace
+            </button>
           </div>
         )}
       </main>

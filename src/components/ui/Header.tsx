@@ -17,7 +17,7 @@ const Header = (props: HeaderProps) => {
   const activeWorkspaceId = localStorage.getItem("workspace");
   const { data: workspace } = useFetchMyWorkspaceById(activeWorkspaceId!);
 
-  const isWorkspacePage = location.pathname === "/workspace";
+  const isWorkspacePage = (location.pathname === "/workspace" || location.pathname === "/workspace/create");
 
   // only fetch when viewing ticket details
   const { data: ticket } = useGetTicketById(id!);
