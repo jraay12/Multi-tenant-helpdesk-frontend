@@ -2,12 +2,20 @@ import { X } from "lucide-react";
 import SearchComponent from "./Search";
 import { useState, useEffect } from "react";
 import { useFetchUserForInvites } from "../../features/team/hooks/userFetchUserForInvite";
+import { useDirectInviteMembers } from "../../features/team/hooks/useDirectInviteMembers";
+
 type Props = {
   isOpen: boolean;
   onClose: () => void;
 };
 
-const roles = [
+type Role = "ADMIN" | "OWNER" | "AGENT" | "VIEWER";
+
+const roles: {
+  value: Role;
+  label: string;
+  description: string;
+}[] = [
   {
     value: "ADMIN",
     label: "Admin",
@@ -21,6 +29,11 @@ const roles = [
   {
     value: "VIEWER",
     label: "Viewer",
+    description: "Readonly access to activity logs",
+  },
+  {
+    value: "OWNER",
+    label: "Owner",
     description: "Readonly access to activity logs",
   },
 ];
@@ -135,7 +148,7 @@ const AssignRole = ({
   onChange,
 }: {
   selectedRole: string;
-  onChange: (role: string) => void;
+  onChange: (role: Role) => void;
 }) => {
   return (
     <div className="mt-5">
@@ -167,10 +180,10 @@ const AssignRole = ({
 // Main Component
 const InviteTeamModal = ({ isOpen, onClose }: Props) => {
   const [selectedMembers, setSelectedMembers] = useState<any[]>([]);
-  const [selectedRole, setSelectedRole] = useState("AGENT");
+  const [selectedRole, setSelectedRole] = useState<Role>("AGENT");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [search, setSearch] = useState("");
-
+  const directInviteMutation = useDirectInviteMembers();
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(search);
@@ -195,7 +208,14 @@ const InviteTeamModal = ({ isOpen, onClose }: Props) => {
       role: selectedRole,
     };
 
-    console.log(payload);
+    directInviteMutation.mutate(
+      { role: payload.role, userIds: payload.userIds },
+      {
+        onSuccess: () => {
+          onClose()
+        },
+      },
+    );
   };
 
   return (

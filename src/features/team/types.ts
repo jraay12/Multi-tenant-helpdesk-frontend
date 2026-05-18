@@ -4,3 +4,9 @@ export interface FetchUserInvites {
   email: string
   isMember: boolean
 }
+
+
+export interface DirectInviteInputs {
+  userIds: string[]
+  role: "AGENT" | "VIEWER" | "ADMIN" | "OWNER"
+}
