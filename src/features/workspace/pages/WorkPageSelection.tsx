@@ -4,7 +4,6 @@ import Footer from "../../../components/ui/Footer";
 import { useFetchMyWorkspace } from "../hooks/useFetchMyWorkspace";
 import { useNavigate } from "react-router";
 import { Plus } from "lucide-react";
-import WorkspaceCreation from "../../../components/ui/WorkspaceCreation";
 const WorkspacePageSelection = () => {
   const navigate = useNavigate();
   const activateWorkspaceId = localStorage.getItem("workspace");
@@ -65,6 +64,10 @@ const WorkspacePageSelection = () => {
                 isActive={activateWorkspaceId === workspace.id}
               />
             ))}
+            <div onClick={() => navigate("/workspace/create")} className="group relative flex flex-col justify-center items-center w-full md:max-w-xs min-h-55 cursor-pointer gap-2 rounded-2xl border-dashed border-2 border-black bg-[#fafaff] p-5 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
+              <Plus className="ring-2 rounded-2xl text-black/70"/>
+              <h1 className="font-medium text-black/70">Create New Workspace</h1>
+            </div>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-20 text-center">
@@ -75,7 +78,10 @@ const WorkspacePageSelection = () => {
             <p className="text-sm text-gray-400 mt-1">
               Create your first workspace to get started.
             </p>
-            <button className="flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-md px-10 py-2 mx-auto mt-10 cursor-pointer text-sm font-medium transition-all duration-200 hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-600 hover:shadow-sm active:scale-[0.98]">
+            <button
+              className="flex items-center justify-center gap-2 bg-white border border-gray-300 rounded-md px-10 py-2 mx-auto mt-10 cursor-pointer text-sm font-medium transition-all duration-200 hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-600 hover:shadow-sm active:scale-[0.98]"
+              onClick={() => navigate("/workspace/create")}
+            >
               <Plus className="w-4 h-4" />
               Create Workspace
             </button>

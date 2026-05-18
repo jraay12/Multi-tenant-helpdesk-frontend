@@ -14,7 +14,7 @@ const WorkspaceCard = (props: WorkspaceCardProps) => {
     <div
       onClick={props.onClick}
       className={`
-        group relative flex flex-col w-full max-w-xs min-h-max cursor-pointer
+        group relative flex flex-col w-full md:max-w-xs min-h-max cursor-pointer
         rounded-2xl border bg-white p-5 transition-all duration-200
         hover:shadow-md hover:-translate-y-0.5
         ${props.isActive
