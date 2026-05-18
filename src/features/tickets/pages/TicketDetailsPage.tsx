@@ -5,7 +5,9 @@ import { useUpdateTicketPriority } from "../hooks/useUpdateTicketPriority";
 import TicketNotFound from "../../../components/ui/TicketNotFound";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
+import { useGetTicketComment } from "../hooks/useGetTicketComment";
 import AssignTicketModal from "../../../components/ui/AssignTicketModal";
+import { getCurrentUserId } from "../../../lib/auth";
 import {
   UserCircle,
   ChevronDown,
@@ -16,6 +18,7 @@ import {
   Tag,
   AlertCircle,
 } from "lucide-react";
+import TicketCommentCard from "../../../components/ui/TicketCommentCard";
 
 type TicketForm = {
   priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
@@ -64,7 +67,9 @@ const TicketDetailsPage = () => {
   const currentPriority = watch("priority");
   const updateTicketStatusMutation = useUpdateTicketStatus();
   const updateTicketPriorityMutation = useUpdateTicketPriority();
+  const { data: comments } = useGetTicketComment(id!);
   const isClosed = currentStatus === "CLOSED";
+  const currentUserId = getCurrentUserId()
 
   useEffect(() => {
     if (data) reset({ priority: data.priority, status: data.status });
@@ -278,8 +283,24 @@ const TicketDetailsPage = () => {
         {/* LEFT — Chat */}
         <div className="flex flex-col flex-1 min-w-0 min-h-0">
           {/* Chat area */}
-          <div className="flex-1 overflow-y-auto p-4 md:p-6">
-            <div className="text-sm text-gray-400">Chat / Messages</div>
+          <div className="flex-1 overflow-y-auto p-4 md:p-6 space-y-3">
+            <TicketCommentCard
+              description={comments?.ticket.description}
+              customer_name={comments?.ticket.customer_name}
+              isOriginal={true}
+              prefix={getPrefixName(comments?.ticket.customer_name!)}
+            />
+            {comments?.comments &&
+              comments.comments.map((item) => (
+                <TicketCommentCard
+                  description={item.message}
+                  agent_name={item.user?.name}
+                  key={item.id}
+                  prefix={getPrefixName(item.user?.name)}
+                  isMe={currentUserId === item.userId}
+                  
+                />
+              ))}
           </div>
 
           {/* Input area */}
@@ -336,3 +357,12 @@ const TicketDetailsPage = () => {
 };
 
 export default TicketDetailsPage;
+
+
+const getPrefixName = (name?: string) => {
+  if (!name) return "";
+
+  return name.split(" ")[0][0].toUpperCase();
+};
+
+console.log(getPrefixName("Maria Santos"))
