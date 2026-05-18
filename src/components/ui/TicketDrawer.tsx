@@ -1,6 +1,7 @@
 import { X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useCreateTicket } from "../../features/tickets/hooks/useCreateTicket";
+
 type TicketDrawerProps = {
   onClose: () => void;
   open: boolean;
@@ -9,9 +10,9 @@ type TicketDrawerProps = {
 type TicketForm = {
   title: string;
   description: string;
-  priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT" ;
+  priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
   category: string;
-  customer_name: string
+  customer_name: string;
 };
 
 const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
@@ -26,7 +27,7 @@ const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
       category: "",
       description: "",
       priority: "LOW",
-      customer_name: ""
+      customer_name: "",
     },
   });
 
@@ -35,11 +36,19 @@ const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
   const onSubmit = (data: TicketForm) => {
     createTicketMutation.mutate(data, {
       onSuccess: () => {
+        // reset FIRST (prevents stale RHF state)
+        reset({
+          title: "",
+          category: "",
+          description: "",
+          priority: "LOW",
+          customer_name: "",
+        });
+
+        // then close drawer
         onClose();
       },
     });
-    reset();
-    onClose();
   };
 
   return (
@@ -67,21 +76,21 @@ const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
           <h1>Create New Ticket</h1>
           <button
             onClick={onClose}
-            className=" rounded hover:bg-gray-100 cursor-pointer"
+            className="rounded hover:bg-gray-100 cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <div className="flex flex-col p-5 flex-1">
-          {/* FORM (ONLY ADDED INSIDE YOUR DESIGN) */}
           <form
+            key={open ? "open" : "closed"}   // 🔥 FIX: forces RHF rebind
             onSubmit={handleSubmit(onSubmit)}
             className="space-y-4 flex flex-col h-full"
           >
             {/* Title */}
             <div>
-              <label className="text-sm ">TICKET SUBJECT</label>
+              <label className="text-sm">TICKET SUBJECT</label>
               <input
                 {...register("title", {
                   required: "Ticket Subject is required",
@@ -90,7 +99,7 @@ const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
                 placeholder="Brief summary of the issue"
               />
               {errors.title && (
-                <span className="text-red-500 text-xs ">
+                <span className="text-red-500 text-xs">
                   {errors.title.message}
                 </span>
               )}
@@ -98,7 +107,7 @@ const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
 
             {/* Customer Name */}
             <div>
-              <label className="text-sm ">CUSTOMER NAME</label>
+              <label className="text-sm">CUSTOMER NAME</label>
               <input
                 {...register("customer_name", {
                   required: "Customer Name is required",
@@ -107,7 +116,7 @@ const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
                 placeholder="John Doe"
               />
               {errors.customer_name && (
-                <span className="text-red-500 text-xs ">
+                <span className="text-red-500 text-xs">
                   {errors.customer_name.message}
                 </span>
               )}
@@ -128,14 +137,14 @@ const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
                   <option value="URGENT">URGENT</option>
                 </select>
                 {errors.priority && (
-                  <span className="text-red-500 text-xs ">
+                  <span className="text-red-500 text-xs">
                     {errors.priority.message}
                   </span>
                 )}
               </div>
 
               <div>
-                <label className="text-sm ">CATEGORY</label>
+                <label className="text-sm">CATEGORY</label>
                 <input
                   {...register("category", {
                     required: "Category is required",
@@ -144,7 +153,7 @@ const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
                   placeholder="e.g. Authentication"
                 />
                 {errors.category && (
-                  <span className="text-red-500 text-xs ">
+                  <span className="text-red-500 text-xs">
                     {errors.category.message}
                   </span>
                 )}
@@ -153,22 +162,24 @@ const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
 
             {/* Description */}
             <div>
-              <label className="text-sm ">DESCRIPTION</label>
+              <label className="text-sm">DESCRIPTION</label>
               <textarea
                 {...register("description", {
                   required: "Description is required",
                 })}
                 className="w-full mt-1 border rounded-md outline-none border-gray-300 px-3 py-2 text-sm min-h-25 bg-[#f2f3fc]"
-                placeholder="Detailed explaination of the request..."
+                placeholder="Detailed explanation of the request..."
               />
               {errors.description && (
-                <span className="text-red-500 text-xs ">
+                <span className="text-red-500 text-xs">
                   {errors.description.message}
                 </span>
               )}
             </div>
+
             <div className="flex-1"></div>
-            {/* cancel */}
+
+            {/* Buttons */}
             <div className="flex gap-5">
               <button
                 type="button"
@@ -177,7 +188,7 @@ const TicketDrawer = ({ open, onClose }: TicketDrawerProps) => {
               >
                 Cancel
               </button>
-              {/* Submit */}
+
               <button
                 type="submit"
                 className="w-full mt-4 bg-blue-900 text-white py-2 rounded-md text-sm cursor-pointer"
