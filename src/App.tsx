@@ -11,7 +11,7 @@ import WorkspaceRoute from "./app/router/WorkspaceRoute";
 import TicketPage from "./features/tickets/pages/TicketPage";
 import TicketDetailsPage from "./features/tickets/pages/TicketDetailsPage";
 import WorkspaceCreation from "./components/ui/WorkspaceCreation";
-import TeamPage from "./features/team/TeamPage";
+import TeamPage from "./features/team/pages/TeamPage";
 function App() {
   return (
     <Routes>
@@ -62,7 +62,6 @@ function App() {
         <Route path="/tickets" element={<TicketPage />} />
         <Route path="/tickets/:id" element={<TicketDetailsPage />} />
         <Route path="/team" element={<TeamPage />} />
-
       </Route>
     </Routes>
   );

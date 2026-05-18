@@ -1,53 +1,38 @@
-import { Search, X } from "lucide-react";
+import { X } from "lucide-react";
 import SearchComponent from "./Search";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import { useFetchUserForInvites } from "../../features/team/hooks/userFetchUserForInvite";
 type Props = {
   isOpen: boolean;
   onClose: () => void;
 };
 
-const dummyUsers = [
-  {
-    id: "1",
-    name: "Alex Rivera",
-    username: "arivera_ops",
-    avatar: "https://i.pravatar.cc/150?img=45",
-    role: "Support Agent",
-  },
-  {
-    id: "2",
-    name: "Sophia Bennett",
-    username: "sophia_dev",
-    avatar: "https://i.pravatar.cc/150?img=32",
-    role: "Frontend Developer",
-  },
-];
-
 const roles = [
   {
     value: "ADMIN",
     label: "Admin",
-    description: "Full control over settings & users"
+    description: "Full control over settings & users",
   },
   {
     value: "AGENT",
     label: "Agent",
-    description: "Can handle and resolve tickets"
+    description: "Can handle and resolve tickets",
   },
   {
     value: "VIEWER",
     label: "Viewer",
-    description: "Readonly access to activity logs"
+    description: "Readonly access to activity logs",
   },
 ];
 
 const FoundUsers = ({
   users,
   onInvite,
+  selectedUser,
 }: {
   users: any[];
   onInvite: (user: any) => void;
+  selectedUser: any[];
 }) => {
   return (
     <div className="mt-4">
@@ -55,7 +40,12 @@ const FoundUsers = ({
 
       <div className="w-full rounded-md mt-4 flex flex-col gap-3">
         {users.map((user) => (
-          <UserItem key={user.id} user={user} onInvite={onInvite} />
+          <UserItem
+            key={user.id}
+            user={user}
+            onInvite={onInvite}
+            selectedUser={selectedUser}
+          />
         ))}
       </div>
     </div>
@@ -65,24 +55,39 @@ const FoundUsers = ({
 const UserItem = ({
   user,
   onInvite,
+  selectedUser,
 }: {
   user: any;
   onInvite: (user: any) => void;
+  selectedUser: any;
 }) => {
+  const userAlreadySelected = selectedUser.some((u: any) => u.id === user.id);
   return (
     <div className="flex items-center justify-between bg-[#f2f3fc] p-2 rounded-md">
       <div className="flex items-center gap-4">
-        <img src={user.avatar} alt="" className="rounded-full h-10 w-10" />
+        <img
+          src="https://i.pravatar.cc/150?img=45"
+          alt=""
+          className="rounded-full h-10 w-10"
+        />
 
         <div className="flex flex-col">
           <h1 className="text-sm font-medium">{user.name}</h1>
-          <p className="text-xs font-medium text-black/40">@{user.username}</p>
+          <p className="text-xs font-medium text-black/40">@{user.email}</p>
+          {user.isMember && (
+            <p className="absolute ml-40 mt-2 text-xs bg-[#d9e1fc] font-bold p-1 px-2 rounded-full">
+              ALREADY REGISTERED
+            </p>
+          )}
         </div>
       </div>
 
       <button
+        disabled={user.isMember || userAlreadySelected}
         onClick={() => onInvite(user)}
-        className="text-xs px-3 py-1 rounded-md bg-indigo-500 text-white hover:bg-indigo-600"
+        className="text-xs px-3 py-1 rounded-md transition-all cursor-pointer
+    bg-indigo-500 text-white hover:bg-indigo-600
+    disabled:bg-gray-300 disabled:text-gray-500 disabled:cursor-not-allowed disabled:hover:bg-gray-300"
       >
         Invite
       </button>
@@ -106,10 +111,17 @@ const SelectedMembers = ({
       <div className="flex gap-4 flex-wrap">
         {selectedMembers.map((member) => (
           <div className="flex bg-white gap-4 items-center px-4 py-1 rounded-md">
-            <img src={member.avatar} alt="" className="h-8 w-8 rounded-full" />
-            <p>{member.name}</p>
-            <button className="cursor-pointer" onClick={() => onRemove(member.id)}>
-              <X className="h-4 w-4 rounded-full border rounded-b-full" />
+            <img
+              src="https://i.pravatar.cc/150?img=45"
+              alt=""
+              className="h-8 w-8 rounded-full"
+            />
+            <p className="text-sm font-medium">{member.name}</p>
+            <button
+              className="cursor-pointer"
+              onClick={() => onRemove(member.id)}
+            >
+              <X className="h-4 w-4 rounded-full border-2 rounded-b-full" />
             </button>
           </div>
         ))}
@@ -156,6 +168,18 @@ const AssignRole = ({
 const InviteTeamModal = ({ isOpen, onClose }: Props) => {
   const [selectedMembers, setSelectedMembers] = useState<any[]>([]);
   const [selectedRole, setSelectedRole] = useState("AGENT");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  const { data } = useFetchUserForInvites(debouncedSearch);
 
   const handleInvite = (user: any) => {
     setSelectedMembers((prev) => [...prev, user]);
@@ -167,7 +191,7 @@ const InviteTeamModal = ({ isOpen, onClose }: Props) => {
 
   const handleSubmit = () => {
     const payload = {
-      members: selectedMembers,
+      userIds: selectedMembers.map((u) => u.id),
       role: selectedRole,
     };
 
@@ -220,9 +244,17 @@ const InviteTeamModal = ({ isOpen, onClose }: Props) => {
 
         <div className="px-5 pt-5 mb-10">
           <div className="bg-[#f5f5fa]">
-            <SearchComponent placeholder="search user name" />
+            <SearchComponent
+              placeholder="search user name"
+              value={search}
+              onChange={setSearch}
+            />
           </div>
-          <FoundUsers users={dummyUsers} onInvite={handleInvite} />
+          <FoundUsers
+            users={data ?? []}
+            onInvite={handleInvite}
+            selectedUser={selectedMembers}
+          />
           <SelectedMembers
             selectedMembers={selectedMembers}
             onRemove={handleRemove}
@@ -234,7 +266,7 @@ const InviteTeamModal = ({ isOpen, onClose }: Props) => {
           <button
             type="button"
             onClick={() => handleSubmit()}
-            className="rounded-lg p-4 text-white bg-[#0059bf] border border-[#0059bf] flex items-center justify-center transition-all duration-200 cursor-pointer hover:bg-[#004799] hover:border-[#004799] hover:shadow-md active:scale-[0.98]"
+            className="rounded-lg p-2 text-white bg-[#0059bf] border border-[#0059bf] flex items-center justify-center transition-all duration-200 cursor-pointer hover:bg-[#004799] hover:border-[#004799] hover:shadow-md active:scale-[0.98]"
           >
             Add to Workspace
           </button>
