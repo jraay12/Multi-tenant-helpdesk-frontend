@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useFetchWorkspaceMember } from "../../features/workspace/hooks/useFetchWorkspaceMembers";
 
 // ── types ─────────────────────────────────────────────────────────────────────
 type Role = "OWNER" | "ADMIN" | "AGENT" | "VIEWER";
@@ -121,7 +122,9 @@ function RoleBadge({ role }: { role: Role }) {
 function StatusCell({ status }: { status: Status }) {
   return (
     <div className="flex items-center gap-2">
-      <span className={`w-2 h-2 rounded-full flex-shrink-0 ${STATUS_DOT[status]}`} />
+      <span
+        className={`w-2 h-2 rounded-full flex-shrink-0 ${STATUS_DOT[status]}`}
+      />
       <span className={`text-sm ${STATUS_TEXT[status]}`}>{status}</span>
     </div>
   );
@@ -144,7 +147,7 @@ function TicketBar({ value, max }: { value: number; max: number }) {
   );
 }
 
-function ThreeDotsMenu({ memberId }: { memberId: number }) {
+function ThreeDotsMenu({ memberId }: { memberId: string }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -154,7 +157,13 @@ function ThreeDotsMenu({ memberId }: { memberId: number }) {
         className="p-1.5 rounded-md hover:bg-gray-100 transition-colors text-gray-400 hover:text-gray-700"
         aria-label="Member actions"
       >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <svg
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          aria-hidden="true"
+        >
           <circle cx="12" cy="5" r="1.5" />
           <circle cx="12" cy="12" r="1.5" />
           <circle cx="12" cy="19" r="1.5" />
@@ -166,18 +175,19 @@ function ThreeDotsMenu({ memberId }: { memberId: number }) {
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
           <div className="absolute right-0 top-8 z-20 w-44 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
             {[
-              { label: "View profile",   icon: "👤" },
-              { label: "Change role",    icon: "🔑" },
+              { label: "View profile", icon: "👤" },
+              { label: "Change role", icon: "🔑" },
               { label: "Reassign tickets", icon: "🎫" },
-              { label: "Remove member",  icon: "🗑️", danger: true },
+              { label: "Remove member", icon: "🗑️", danger: true },
             ].map(({ label, icon, danger }) => (
               <button
                 key={label}
                 onClick={() => setOpen(false)}
                 className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-sm text-left transition-colors
-                  ${danger
-                    ? "text-red-600 hover:bg-red-50"
-                    : "text-gray-700 hover:bg-gray-50"
+                  ${
+                    danger
+                      ? "text-red-600 hover:bg-red-50"
+                      : "text-gray-700 hover:bg-gray-50"
                   }`}
               >
                 <span>{icon}</span>
@@ -208,14 +218,27 @@ function Checkbox({
       aria-label={ariaLabel}
       onClick={onChange}
       className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors
-        ${checked
-          ? "bg-blue-600 border-blue-600"
-          : "border-gray-300 bg-white hover:border-blue-400"
+        ${
+          checked
+            ? "bg-blue-600 border-blue-600"
+            : "border-gray-300 bg-white hover:border-blue-400"
         }`}
     >
       {checked && (
-        <svg width="9" height="9" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-          <polyline points="2,6 5,9 10,3" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <svg
+          width="9"
+          height="9"
+          viewBox="0 0 12 12"
+          fill="none"
+          aria-hidden="true"
+        >
+          <polyline
+            points="2,6 5,9 10,3"
+            stroke="white"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       )}
     </button>
@@ -247,7 +270,10 @@ function Pagination({
       <div className="flex items-center gap-1">
         {pages.map((p, i) =>
           p === "..." ? (
-            <span key={`ellipsis-${i}`} className="px-2 text-gray-400 text-sm select-none">
+            <span
+              key={`ellipsis-${i}`}
+              className="px-2 text-gray-400 text-sm select-none"
+            >
               ...
             </span>
           ) : (
@@ -255,14 +281,15 @@ function Pagination({
               key={p}
               onClick={() => onChange(p as number)}
               className={`w-8 h-8 rounded-lg text-sm font-medium transition-colors
-                ${page === p
-                  ? "bg-blue-600 text-white"
-                  : "text-gray-600 hover:bg-gray-100"
+                ${
+                  page === p
+                    ? "bg-blue-600 text-white"
+                    : "text-gray-600 hover:bg-gray-100"
                 }`}
             >
               {p}
             </button>
-          )
+          ),
         )}
       </div>
 
@@ -278,32 +305,31 @@ function Pagination({
 }
 
 // ── main component ────────────────────────────────────────────────────────────
-const TeamTable = ({onInvite}: Props) => {
-  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
+const TeamTable = ({ onInvite }: Props) => {
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [page, setPage] = useState(1);
+  const { data } = useFetchWorkspaceMember();
+  console.log(data);
+  const pagedMembers = data?.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const pagedMembers = MOCK_MEMBERS.slice(
-    (page - 1) * PAGE_SIZE,
-    page * PAGE_SIZE
-  );
+  const members = pagedMembers ?? [];
 
   const allPageSelected =
-    pagedMembers.length > 0 &&
-    pagedMembers.every((m) => selectedIds.has(m.id));
+    members?.length > 0 && pagedMembers?.every((m) => selectedIds.has(m.id));
 
   const toggleAll = () => {
     setSelectedIds((prev) => {
       const next = new Set(prev);
       if (allPageSelected) {
-        pagedMembers.forEach((m) => next.delete(m.id));
+        pagedMembers?.forEach((m) => next.delete(m.id));
       } else {
-        pagedMembers.forEach((m) => next.add(m.id));
+        pagedMembers?.forEach((m) => next.add(m.id));
       }
       return next;
     });
   };
 
-  const toggleOne = (id: number) => {
+  const toggleOne = (id: string) => {
     setSelectedIds((prev) => {
       const next = new Set(prev);
       next.has(id) ? next.delete(id) : next.add(id);
@@ -313,37 +339,69 @@ const TeamTable = ({onInvite}: Props) => {
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-
       {/* ── toolbar ── */}
       <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
         <div className="flex items-center gap-2">
           {/* invite */}
-          <button onClick={onInvite} className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-[.98] text-white text-sm font-medium px-4 py-2 rounded-lg transition-all">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-              <circle cx="9" cy="7" r="4"/>
-              <line x1="19" y1="8" x2="19" y2="14"/>
-              <line x1="22" y1="11" x2="16" y2="11"/>
+          <button
+            onClick={onInvite}
+            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 active:scale-[.98] text-white text-sm font-medium px-4 py-2 rounded-lg transition-all"
+          >
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <line x1="19" y1="8" x2="19" y2="14" />
+              <line x1="22" y1="11" x2="16" y2="11" />
             </svg>
             Invite Team
           </button>
 
           {/* filter */}
           <button className="flex items-center gap-2 border border-gray-200 text-gray-600 text-sm px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <line x1="4" y1="6" x2="20" y2="6"/>
-              <line x1="8" y1="12" x2="16" y2="12"/>
-              <line x1="11" y1="18" x2="13" y2="18"/>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="4" y1="6" x2="20" y2="6" />
+              <line x1="8" y1="12" x2="16" y2="12" />
+              <line x1="11" y1="18" x2="13" y2="18" />
             </svg>
             Filter
           </button>
 
           {/* sort */}
           <button className="flex items-center gap-2 border border-gray-200 text-gray-600 text-sm px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <line x1="6" y1="12" x2="18" y2="12"/>
-              <line x1="9" y1="18" x2="15" y2="18"/>
+            <svg
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true"
+            >
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="6" y1="12" x2="18" y2="12" />
+              <line x1="9" y1="18" x2="15" y2="18" />
             </svg>
             Sort
           </button>
@@ -354,8 +412,7 @@ const TeamTable = ({onInvite}: Props) => {
           <span className="font-medium text-gray-700">
             {Math.min(PAGE_SIZE, MOCK_MEMBERS.length)}
           </span>{" "}
-          of{" "}
-          <span className="font-medium text-gray-700">{TOTAL_MEMBERS}</span>{" "}
+          of <span className="font-medium text-gray-700">{TOTAL_MEMBERS}</span>{" "}
           members
         </span>
       </div>
@@ -365,13 +422,6 @@ const TeamTable = ({onInvite}: Props) => {
         <table className="w-full min-w-[680px]">
           <thead>
             <tr className="border-b border-gray-100 bg-white">
-              <th className="w-10 px-4 py-3 text-left">
-                <Checkbox
-                  checked={allPageSelected}
-                  onChange={toggleAll}
-                  ariaLabel="Select all on this page"
-                />
-              </th>
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
                 Member name
               </th>
@@ -391,36 +441,29 @@ const TeamTable = ({onInvite}: Props) => {
           </thead>
 
           <tbody className="divide-y divide-gray-100">
-            {pagedMembers.map((member) => (
+            {pagedMembers?.map((member) => (
               <tr
                 key={member.id}
                 className={`transition-colors ${
-                  selectedIds.has(member.id) ? "bg-blue-50/50" : "hover:bg-gray-50/60"
+                  selectedIds.has(member.id)
+                    ? "bg-blue-50/50"
+                    : "hover:bg-gray-50/60"
                 }`}
               >
-                {/* checkbox */}
-                <td className="px-4 py-4">
-                  <Checkbox
-                    checked={selectedIds.has(member.id)}
-                    onChange={() => toggleOne(member.id)}
-                    ariaLabel={`Select ${member.name}`}
-                  />
-                </td>
-
                 {/* member */}
                 <td className="px-4 py-4">
                   <div className="flex items-center gap-3">
                     <img
-                      src={member.avatar}
-                      alt={member.name}
+                      src="https://i.pravatar.cc/40?img=47"
+                      alt={member.user.name}
                       className="w-9 h-9 rounded-full object-cover flex-shrink-0"
                     />
                     <div>
                       <div className="text-sm font-semibold text-gray-900">
-                        {member.name}
+                        {member.user.name}
                       </div>
                       <div className="text-xs text-gray-400 mt-0.5">
-                        {member.email}
+                        {member.user.email}
                       </div>
                     </div>
                   </div>
@@ -428,17 +471,20 @@ const TeamTable = ({onInvite}: Props) => {
 
                 {/* role */}
                 <td className="px-4 py-4">
-                  <RoleBadge role={member.role} />
+                  <RoleBadge role={member.role as Role} />
                 </td>
 
                 {/* status */}
                 <td className="px-4 py-4">
-                  <StatusCell status={member.status} />
+                  <StatusCell status="Active" />
                 </td>
 
                 {/* assigned tickets */}
                 <td className="px-4 py-4">
-                  <TicketBar value={member.assignedTickets} max={member.maxTickets} />
+                  <TicketBar
+                    value={member.user._count.ticketsAssigned}
+                    max={100}
+                  />
                 </td>
 
                 {/* actions */}

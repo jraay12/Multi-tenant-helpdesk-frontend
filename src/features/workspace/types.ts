@@ -31,7 +31,11 @@ export interface WorkspaceMembers {
   user: {
     name: string;
     email: string;
+    _count: {
+      ticketsAssigned: number
+    }
   };
+  
 }
 
 
