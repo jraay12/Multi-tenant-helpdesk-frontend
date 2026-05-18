@@ -74,19 +74,25 @@ const DashboardPage = () => {
         {/* Recent Tickets */}
         <div className="xl:col-span-7 min-h-[350px]">
           <h1 className="font-medium mb-2 text-[18px]">Recent Tickets</h1>
+
           <div className="space-y-3">
-            {recentTickets &&
+            {recentTickets?.length ? (
               recentTickets.map((ticket) => (
                 <RecentTicketTable
+                  key={ticket.id}
                   category={ticket.category}
                   customer_name={ticket.customer_name}
                   priority={ticket.priority}
                   status={ticket.status}
                   timeAgo={ticket.timeAgo}
                   title={ticket.title}
-                  key={ticket.id}
                 />
-              ))}
+              ))
+            ) : (
+              <div className="text-gray-500 text-sm">
+                No Recent Tickets Found
+              </div>
+            )}
           </div>
         </div>
 
