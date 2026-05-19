@@ -62,7 +62,7 @@ const SideBar = () => {
           label: "Activity log",
           value: "activitylog",
           icon: Activity,
-          path: "/activity",
+          path: "/activity-logs",
         },
       ],
       CONFIG: [

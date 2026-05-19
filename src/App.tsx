@@ -12,6 +12,7 @@ import TicketPage from "./features/tickets/pages/TicketPage";
 import TicketDetailsPage from "./features/tickets/pages/TicketDetailsPage";
 import WorkspaceCreation from "./components/ui/WorkspaceCreation";
 import TeamPage from "./features/team/pages/TeamPage";
+import ActivityLogsPage from "./features/activity-logs/pages/ActivityLogsPage";
 function App() {
   return (
     <Routes>
@@ -62,6 +63,7 @@ function App() {
         <Route path="/tickets" element={<TicketPage />} />
         <Route path="/tickets/:id" element={<TicketDetailsPage />} />
         <Route path="/team" element={<TeamPage />} />
+        <Route path="/activity-logs" element={<ActivityLogsPage />} />
       </Route>
     </Routes>
   );
