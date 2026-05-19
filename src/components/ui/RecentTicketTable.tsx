@@ -62,7 +62,6 @@ const PRIORITY_CONFIG = {
 const RecentTicketTable = (props: RecentTicketProps) => {
   const statusConfig =
     STATUS_CONFIG[props.status as keyof typeof STATUS_CONFIG];
-  console.log(statusConfig);
 
   const priorityConfig =
     PRIORITY_CONFIG[props.priority as keyof typeof PRIORITY_CONFIG];
