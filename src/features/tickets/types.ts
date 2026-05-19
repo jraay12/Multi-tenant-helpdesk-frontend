@@ -13,6 +13,7 @@ export interface Ticket {
   status: "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
   priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
   category: string;
+  ticket_number: string
   workspaceId: string;
   createdById: string;
   assignedToId: string | null;

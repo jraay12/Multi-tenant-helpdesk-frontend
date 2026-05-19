@@ -152,7 +152,7 @@ const TicketDetailsPage = () => {
         {/* Ticket ID + quick status badge */}
         <div className="flex items-center justify-between">
           <span className="text-xs font-mono text-gray-400">
-            #{data.id?.slice(0, 8)}
+            #{data.ticket_number}
           </span>
           <span
             className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border ${statusBadge(currentStatus)}`}
