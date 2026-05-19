@@ -16,9 +16,11 @@ import {
   PanelRightOpen,
   PanelRightClose,
   Tag,
-  AlertCircle,
 } from "lucide-react";
 import TicketCommentCard from "../../../components/ui/TicketCommentCard";
+import ReplyComponent from "../../../components/ui/ReplyComponent";
+import { socket } from "../../../lib/socket";
+import type { TicketComment, TicketMessage } from "../types";
 
 type TicketForm = {
   priority: "LOW" | "MEDIUM" | "HIGH" | "URGENT";
@@ -61,15 +63,51 @@ const TicketDetailsPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   // Controls the right panel on mobile/tablet (slide-over drawer)
   const [isPanelOpen, setIsPanelOpen] = useState(false);
-
+  const [allComments, setAllComments] = useState<TicketComment | null>(null);
   const { register, handleSubmit, reset, watch } = useForm<TicketForm>();
   const currentStatus = watch("status");
   const currentPriority = watch("priority");
   const updateTicketStatusMutation = useUpdateTicketStatus();
   const updateTicketPriorityMutation = useUpdateTicketPriority();
   const { data: comments } = useGetTicketComment(id!);
+  console.log(comments);
   const isClosed = currentStatus === "CLOSED";
-  const currentUserId = getCurrentUserId()
+  const currentUserId = getCurrentUserId();
+
+  useEffect(() => {
+    if (comments) {
+      setAllComments(comments);
+    }
+  }, [comments]);
+
+  useEffect(() => {
+    if (!id) return;
+
+    socket.emit("join-ticket", id);
+
+    return () => {
+      socket.emit("leave-ticket", id);
+    };
+  }, [id]);
+
+  useEffect(() => {
+    const handleNewComment = (newComment: TicketMessage) => {
+      setAllComments((prev) => {
+        if (!prev) return prev;
+
+        return {
+          ...prev,
+          comments: [...prev.comments, newComment],
+        };
+      });
+    };
+
+    socket.on("ticket:recieved-message", handleNewComment);
+
+    return () => {
+      socket.off("ticket:recieved-message", handleNewComment);
+    };
+  }, []);
 
   useEffect(() => {
     if (data) reset({ priority: data.priority, status: data.status });
@@ -252,7 +290,7 @@ const TicketDetailsPage = () => {
   );
 
   return (
-    <div className="relative h-screen flex flex-col bg-[#fafaff] overflow-hidden">
+    <div className="relative h-screen flex flex-col bg-white overflow-hidden">
       {/* ── MOBILE / TABLET TOP BAR ── */}
       <div className="flex items-center justify-between px-4 py-3 bg-white border-b border-gray-200 md:hidden">
         <button
@@ -290,22 +328,23 @@ const TicketDetailsPage = () => {
               isOriginal={true}
               prefix={getPrefixName(comments?.ticket.customer_name!)}
             />
-            {comments?.comments &&
-              comments.comments.map((item) => (
+            {allComments?.comments &&
+              allComments.comments.map((item) => (
                 <TicketCommentCard
                   description={item.message}
                   agent_name={item.user?.name}
                   key={item.id}
                   prefix={getPrefixName(item.user?.name)}
                   isMe={currentUserId === item.userId}
-                  
                 />
               ))}
           </div>
 
           {/* Input area */}
-          <div className="h-36 md:h-40 border-t border-gray-200 p-3 bg-white shrink-0">
-            <div className="text-sm text-gray-400">Input / Actions</div>
+          <div className="h-90 md:h-95 border-t border-gray-200 p-3  bg-white shrink-0">
+            <div className="text-sm text-gray-400">
+              <ReplyComponent />
+            </div>
           </div>
         </div>
 
@@ -358,11 +397,10 @@ const TicketDetailsPage = () => {
 
 export default TicketDetailsPage;
 
-
 const getPrefixName = (name?: string) => {
   if (!name) return "";
 
   return name.split(" ")[0][0].toUpperCase();
 };
 
-console.log(getPrefixName("Maria Santos"))
+console.log(getPrefixName("Maria Santos"));

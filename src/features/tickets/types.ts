@@ -27,17 +27,17 @@ export interface TicketComment {
     customer_name: string;
     description: string;
   };
+  comments: TicketMessage[];
+}
 
-  comments: {
-    id: string;
-    message: string;
-    ticketId: string;
-    userId: string;
-    createdAt: string;
-    updatedAt: string;
-
-    user: {
-      name: string;
-    } | null;
-  }[];
+export interface TicketMessage {
+  id: string;
+  message: string;
+  ticketId: string;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+  user: {
+    name: string;
+  } | null;
 }
