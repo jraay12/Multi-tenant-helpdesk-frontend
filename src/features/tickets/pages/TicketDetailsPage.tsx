@@ -70,7 +70,6 @@ const TicketDetailsPage = () => {
   const updateTicketStatusMutation = useUpdateTicketStatus();
   const updateTicketPriorityMutation = useUpdateTicketPriority();
   const { data: comments } = useGetTicketComment(id!);
-  console.log(comments);
   const isClosed = currentStatus === "CLOSED";
   const currentUserId = getCurrentUserId();
 
