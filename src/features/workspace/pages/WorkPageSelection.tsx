@@ -64,9 +64,14 @@ const WorkspacePageSelection = () => {
                 isActive={activateWorkspaceId === workspace.id}
               />
             ))}
-            <div onClick={() => navigate("/workspace/create")} className="group relative flex flex-col justify-center items-center w-full md:max-w-xs min-h-55 cursor-pointer gap-2 rounded-2xl border-dashed border-2 border-black bg-[#fafaff] p-5 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5">
-              <Plus className="ring-2 rounded-2xl text-black/70"/>
-              <h1 className="font-medium text-black/70">Create New Workspace</h1>
+            <div
+              onClick={() => navigate("/workspace/create")}
+              className="group relative flex flex-col justify-center items-center w-full md:max-w-xs min-h-55 cursor-pointer gap-2 rounded-2xl border-dashed border-2 border-black/40 bg-[#fafaff] p-5 transition-all duration-200 hover:shadow-md hover:-translate-y-0.5"
+            >
+              <Plus className="ring-2 rounded-2xl text-black/70" />
+              <h1 className="font-medium text-black/70">
+                Create New Workspace
+              </h1>
             </div>
           </div>
         ) : (
