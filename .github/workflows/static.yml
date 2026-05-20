@@ -23,6 +23,9 @@ jobs:
 
       - name: Build Vite app
         run: npm run build
+        env:
+          VITE_API_URL: http://31.97.108.149:3010
+          VITE_SOCKET_URL: http://31.97.108.149:3010
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
