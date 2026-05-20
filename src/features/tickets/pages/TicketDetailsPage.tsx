@@ -70,6 +70,7 @@ const TicketDetailsPage = () => {
   const updateTicketStatusMutation = useUpdateTicketStatus();
   const updateTicketPriorityMutation = useUpdateTicketPriority();
   const { data: comments } = useGetTicketComment(id!);
+  console.log(comments)
   const isClosed = currentStatus === "CLOSED";
   const currentUserId = getCurrentUserId();
 
@@ -326,6 +327,7 @@ const TicketDetailsPage = () => {
               customer_name={comments?.ticket.customer_name}
               isOriginal={true}
               prefix={getPrefixName(comments?.ticket.customer_name!)}
+              createdAt={comments?.ticket.createdAt!}
             />
             {allComments?.comments &&
               allComments.comments.map((item) => (
@@ -335,6 +337,7 @@ const TicketDetailsPage = () => {
                   key={item.id}
                   prefix={getPrefixName(item.user?.name)}
                   isMe={currentUserId === item.userId}
+                  commentsCreatedAt={item.createdAt}
                 />
               ))}
           </div>

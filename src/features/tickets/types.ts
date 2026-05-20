@@ -27,6 +27,7 @@ export interface TicketComment {
   ticket: {
     customer_name: string;
     description: string;
+    createdAt: Date | undefined
   };
   comments: TicketMessage[];
 }
@@ -36,7 +37,7 @@ export interface TicketMessage {
   message: string;
   ticketId: string;
   userId: string;
-  createdAt: string;
+  createdAt: Date;
   updatedAt: string;
   user: {
     name: string;
