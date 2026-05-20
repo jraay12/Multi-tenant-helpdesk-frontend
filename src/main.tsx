@@ -10,7 +10,7 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
+      <BrowserRouter basename="/Multi-tenant-helpdesk-frontend">
         <App />
       </BrowserRouter>
     </QueryClientProvider>

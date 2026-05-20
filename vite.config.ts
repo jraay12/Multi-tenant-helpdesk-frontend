@@ -9,5 +9,7 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] }),
     tailwindcss(),
+    
   ],
+  base: "/Multi-tenant-helpdesk-frontend/"
 })
