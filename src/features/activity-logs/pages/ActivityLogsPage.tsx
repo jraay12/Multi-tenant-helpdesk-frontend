@@ -1,8 +1,8 @@
 import { useState } from "react";
 import SearchComponent from "../../../components/ui/Search";
 import SelectDropdown from "../../../components/ui/DropdownComponent";
-import { useFetchWorkspaceMember } from "../../workspace/hooks/useFetchWorkspaceMembers";
 import TableComponents from "../../../components/ui/TableComponents";
+import { useFetchWorkspaceMemberNotPaginated } from "../../workspace/hooks/useFetchWorkspaceMembers";
 import { useGetActivityLogs } from "../hooks/useGetActivityLogs";
 
 /* ---------------- TYPES ---------------- */
@@ -11,8 +11,8 @@ type FilterComponentProps = {
   value: string;
   onChange: (value: string) => void;
 
-  userOptions: { label: string; value: string }[];
-  userValue: string;
+  userOptions?: { label: string; value: string }[];
+  userValue?: string;
   userDropdown: (value: string) => void;
 
   eventValue: string;
@@ -82,9 +82,9 @@ function FilterComponent({
         <label className="font-medium">User</label>
 
         <SelectDropdown
-          value={userValue}
+          value={userValue!}
           onChange={userDropdown}
-          data={userOptions}
+          data={userOptions!}
           placeholder="All Users"
         />
       </div>
@@ -131,7 +131,7 @@ const ActivityLogsPage = () => {
   const [page, setPage] = useState(1);
   const limit = 10;
 
-  const { data: members } = useFetchWorkspaceMember();
+  const { data: members } = useFetchWorkspaceMemberNotPaginated();
 
   const {
     data: activityLogs,

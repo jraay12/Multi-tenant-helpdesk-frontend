@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { workspaceMembers } from "../api/GetAllWorkspaceMember";
-
-export const useFetchWorkspaceMember = () => {
+import { workspaceMembersNotPaginated } from "../api/fetchMemberNotPaginated";
+export const useFetchWorkspaceMemberNotPaginated = () => {
   const workspaceById = localStorage.getItem("workspace");
   return useQuery({
     queryKey: ["workspace-members", workspaceById],
-    queryFn: workspaceMembers,
-    enabled: !!workspaceById
+    queryFn: workspaceMembersNotPaginated,
+    enabled: !!workspaceById,
   });
 };

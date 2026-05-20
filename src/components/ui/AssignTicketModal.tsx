@@ -1,6 +1,6 @@
 import { Search, X, UserPlus, Check } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-import { useFetchWorkspaceMember } from "../../features/workspace/hooks/useFetchWorkspaceMembers";
+import {  useFetchWorkspaceMemberNotPaginated } from "../../features/workspace/hooks/useFetchWorkspaceMembers";
 import type { Ticket } from "../../features/tickets/types";
 import { useAssignUser } from "../../features/tickets/hooks/useAssignUser";
 
@@ -21,7 +21,7 @@ const AssignTicketModal = ({
   const assignUserMutation = useAssignUser();
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { data: users } = useFetchWorkspaceMember();
+  const { data: users } = useFetchWorkspaceMemberNotPaginated();
 
   // Handles mount/unmount with transition
   useEffect(() => {
