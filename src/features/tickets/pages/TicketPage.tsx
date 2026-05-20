@@ -70,22 +70,54 @@ function FilterComponent({
 }
 
 const TicketPage = () => {
-  const [ticketFilter, setTicketFilter] = useState<TicketFilterType>("all");
-  const { data: tickets } = useGetTickets({ scope: ticketFilter });
-  const navigate = useNavigate();
-  const [statusFilter, setStatusFilter] = useState("");
-  const [priorityFilter, setPriorityFilter] = useState("");
-  const [assigneeFilter, setAssigneeFilter] = useState("");
+  const [ticketFilter, setTicketFilter] =
+    useState<TicketFilterType>("all");
 
-  const { setTicketCount } = useOutletContext<OutletContextType>();
+  /* PAGINATION */
+  const [page, setPage] = useState(1);
+  const LIMIT = 10;
+
+  const { data: ticketResponse } = useGetTickets({
+    scope: ticketFilter,
+    page,
+    limit: LIMIT,
+  });
+
+  const tickets = ticketResponse?.data ?? [];
+  const totalPages = ticketResponse?.totalPages ?? 1;
+
+  const navigate = useNavigate();
+
+  const [statusFilter, setStatusFilter] =
+    useState("");
+
+  const [priorityFilter, setPriorityFilter] =
+    useState("");
+
+  const [assigneeFilter, setAssigneeFilter] =
+    useState("");
+
+  const { setTicketCount } =
+    useOutletContext<OutletContextType>();
 
   const filteredTickets = tickets?.filter((ticket) => {
-    const matchesStatus = !statusFilter || ticket.status === statusFilter;
+    const matchesStatus =
+      !statusFilter ||
+      ticket.status === statusFilter;
+
     const matchesPriority =
-      !priorityFilter || ticket.priority === priorityFilter;
+      !priorityFilter ||
+      ticket.priority === priorityFilter;
+
     const matchesAssignee =
-      !assigneeFilter || ticket.assignedToId === assigneeFilter;
-    return matchesStatus && matchesPriority && matchesAssignee;
+      !assigneeFilter ||
+      ticket.assignedToId === assigneeFilter;
+
+    return (
+      matchesStatus &&
+      matchesPriority &&
+      matchesAssignee
+    );
   });
 
   const clearFilters = () => {
@@ -95,16 +127,29 @@ const TicketPage = () => {
   };
 
   useEffect(() => {
-    const ticketLength = tickets?.length ?? undefined;
+    const ticketLength =
+      ticketResponse?.total ?? undefined;
 
     setTicketCount(ticketLength);
-  }, [tickets]);
+  }, [ticketResponse]);
 
-  const hasActiveFilters = statusFilter || priorityFilter || assigneeFilter;
+  /* RESET PAGE WHEN FILTER CHANGES */
+  useEffect(() => {
+    setPage(1);
+  }, [ticketFilter]);
+
+  const hasActiveFilters =
+    statusFilter ||
+    priorityFilter ||
+    assigneeFilter;
 
   return (
     <div className="p-6 ">
-      <FilterComponent onChange={setTicketFilter} value={ticketFilter!} />
+      <FilterComponent
+        onChange={setTicketFilter}
+        value={ticketFilter}
+      />
+
       <div className="bg-[#f5f7fa] border border-gray-200 rounded-2xl overflow-hidden">
         {/* Table */}
         <div className="overflow-x-auto">
@@ -114,18 +159,23 @@ const TicketPage = () => {
                 <th className="px-6 py-3 text-[11px] font-semibold text-gray-400 uppercase tracking-wide">
                   Title
                 </th>
+
                 <th className="px-6 py-3 text-[11px] font-semibold text-gray-400 uppercase tracking-wide">
                   Customer
                 </th>
+
                 <th className="px-6 py-3 text-[11px] font-semibold text-gray-400 uppercase tracking-wide">
                   Category
                 </th>
+
                 <th className="px-6 py-3 text-[11px] font-semibold text-gray-400 uppercase tracking-wide">
                   Priority
                 </th>
+
                 <th className="px-6 py-3 text-[11px] font-semibold text-gray-400 uppercase tracking-wide">
                   Status
                 </th>
+
                 <th className="px-6 py-3 text-[11px] font-semibold text-gray-400 uppercase tracking-wide">
                   Assignee
                 </th>
@@ -136,7 +186,9 @@ const TicketPage = () => {
               {filteredTickets?.map((ticket) => (
                 <tr
                   key={ticket.id}
-                  onClick={() => navigate(`/tickets/${ticket.id}`)}
+                  onClick={() =>
+                    navigate(`/tickets/${ticket.id}`)
+                  }
                   className="border-t border-gray-100 hover:bg-[#fafaff] transition-colors cursor-pointer group bg-white"
                 >
                   {/* Title */}
@@ -144,6 +196,7 @@ const TicketPage = () => {
                     <p className="font-medium text-gray-900 truncate group-hover:text-indigo-600 transition-colors">
                       {ticket.title}
                     </p>
+
                     <p className="text-xs text-gray-400 mt-0.5 truncate">
                       {ticket.description}
                     </p>
@@ -153,10 +206,15 @@ const TicketPage = () => {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-2.5">
                       <div
-                        className={`w-7 h-7 ${getAvatarColor(ticket.customer_name)} text-white rounded-full flex items-center justify-center text-[11px] font-bold flex-shrink-0`}
+                        className={`w-7 h-7 ${getAvatarColor(
+                          ticket.customer_name
+                        )} text-white rounded-full flex items-center justify-center text-[11px] font-bold flex-shrink-0`}
                       >
-                        {initialCustomerName(ticket.customer_name)}
+                        {initialCustomerName(
+                          ticket.customer_name
+                        )}
                       </div>
+
                       <span className="text-gray-700 font-medium text-sm">
                         {ticket.customer_name}
                       </span>
@@ -171,7 +229,9 @@ const TicketPage = () => {
                   {/* Priority */}
                   <td className="px-6 py-4">
                     <span
-                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold ${priorityBadge(ticket.priority)}`}
+                      className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-semibold ${priorityBadge(
+                        ticket.priority
+                      )}`}
                     >
                       {ticket.priority}
                     </span>
@@ -180,11 +240,16 @@ const TicketPage = () => {
                   {/* Status */}
                   <td className="px-6 py-4">
                     <span
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${statusBadge(ticket.status)}`}
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ${statusBadge(
+                        ticket.status
+                      )}`}
                     >
                       <span
-                        className={`h-1.5 w-1.5 rounded-full ${statusDot(ticket.status)}`}
+                        className={`h-1.5 w-1.5 rounded-full ${statusDot(
+                          ticket.status
+                        )}`}
                       />
+
                       {ticket.status.replace("_", " ")}
                     </span>
                   </td>
@@ -194,7 +259,9 @@ const TicketPage = () => {
                     {ticket?.assignedTo?.name ? (
                       ticket.assignedTo.name
                     ) : (
-                      <span className="italic text-gray-300">Unassigned</span>
+                      <span className="italic text-gray-300">
+                        Unassigned
+                      </span>
                     )}
                   </td>
                 </tr>
@@ -207,15 +274,48 @@ const TicketPage = () => {
               <div className="h-12 w-12 rounded-xl bg-[#d9e1fc] flex items-center justify-center mb-3 text-xl">
                 🎫
               </div>
+
               <p className="text-sm font-medium text-gray-600">
                 No tickets found
               </p>
+
               <p className="text-xs text-gray-400 mt-1">
                 Try adjusting your filters
               </p>
             </div>
           )}
         </div>
+
+        {/* PAGINATION */}
+        {filteredTickets.length > 0 && (
+          <div className="flex items-center justify-between px-6 py-4 bg-white border-t border-gray-100">
+            <p className="text-sm text-gray-500">
+              Page {page} of {totalPages}
+            </p>
+
+            <div className="flex items-center gap-2">
+              <button
+                disabled={page === 1}
+                onClick={() =>
+                  setPage((prev) => prev - 1)
+                }
+                className="px-4 py-2 text-sm rounded-lg border border-gray-200 bg-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+              >
+                Previous
+              </button>
+
+              <button
+                disabled={page === totalPages}
+                onClick={() =>
+                  setPage((prev) => prev + 1)
+                }
+                className="px-4 py-2 text-sm rounded-lg border border-gray-200 bg-white disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 transition"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
