@@ -3,6 +3,7 @@ import SearchComponent from "../../../components/ui/Search";
 import SelectDropdown from "../../../components/ui/DropdownComponent";
 import { useFetchWorkspaceMember } from "../../workspace/hooks/useFetchWorkspaceMembers";
 import TableComponents from "../../../components/ui/TableComponents";
+import { useGetActivityLogs } from "../hooks/useGetActivityLogs";
 
 /* ---------------- TYPES ---------------- */
 
@@ -101,7 +102,7 @@ function FilterComponent({
       </div>
 
       {/* DATE FILTER */}
-      <div className="flex flex-col gap-1 flex-1 w-full">
+      <div className="hidden  flex-col gap-1 flex-1 w-full">
         <label className="font-medium">Date Range</label>
 
         <SelectDropdown
@@ -121,74 +122,31 @@ function FilterComponent({
   );
 }
 
-/* ---------------- PAGE ---------------- */
-
-export const sampleActivityLogs = [
-  {
-    id: "1",
-    action: "TICKET_CREATED",
-    user: { name: "Jane Doe" },
-    ticket: { ticket_number: "TICK-0001" },
-    createdAt: new Date("2026-05-20T08:30:00Z"),
-    metadata: {
-      title: "Login page bug",
-    },
-  },
-  {
-    id: "2",
-    action: "STATUS_CHANGED",
-    user: { name: "John Smith" },
-    ticket: { ticket_number: "TICK-0002" },
-    createdAt: new Date("2026-05-20T09:10:00Z"),
-    metadata: {
-      from: "OPEN",
-      to: "IN_PROGRESS",
-    },
-  },
-  {
-    id: "3",
-    action: "COMMENT_ADDED",
-    user: { name: "Alice Brown" },
-    ticket: { ticket_number: "TICK-0003" },
-    createdAt: new Date("2026-05-19T14:45:00Z"),
-    metadata: {
-      message: "I’m working on this issue now",
-    },
-  },
-  {
-    id: "4",
-    action: "TICKET_ASSIGNED",
-    user: { name: "System" },
-    ticket: { ticket_number: "TICK-0004" },
-    createdAt: new Date("2026-05-18T12:00:00Z"),
-    metadata: {
-      assignedTo: "John Smith",
-    },
-  },
-  {
-    id: "5",
-    action: "PRIORITY_CHANGED",
-    user: { name: "Jane Doe" },
-    ticket: { ticket_number: "TICK-0005" },
-    createdAt: new Date("2026-05-18T15:20:00Z"),
-    metadata: {
-      from: "LOW",
-      to: "HIGH",
-    },
-  },
-];
-
 const ActivityLogsPage = () => {
   const [search, setSearch] = useState("");
   const [userFilter, setUserFilter] = useState("");
   const [eventFilter, setEventFilter] = useState("");
   const [dateFilter, setDateFilter] = useState("all");
 
+  const [page, setPage] = useState(1);
+  const limit = 10;
+
   const { data: members } = useFetchWorkspaceMember();
+
+  const {
+    data: activityLogs,
+    isLoading,
+  } = useGetActivityLogs({
+    search,
+    userId: userFilter || undefined,
+    action: eventFilter || undefined,
+    page,
+    limit,
+  });
 
   const userOptions =
     members?.map((item) => ({
-      value: item.user.name,
+      value: item.userId,
       label: item.user.name,
     })) ?? [];
 
@@ -196,11 +154,16 @@ const ActivityLogsPage = () => {
     setSearch("");
     setUserFilter("");
     setEventFilter("");
-    setDateFilter("");
+    setDateFilter("all");
+    setPage(1);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
   };
 
   return (
-    <div className="p-7 bg-[#F6F7F9] min-h-screen max-h-screen">
+    <div className="p-7 bg-[#F6F7F9] min-h-screen max-h-screen overflow-y-auto ">
       <h1 className="text-4xl font-medium">Activity Logs</h1>
 
       <p className="text-black/60 mt-2">
@@ -219,30 +182,71 @@ const ActivityLogsPage = () => {
         dateDropdown={setDateFilter}
         clearFilter={handleClearFilter}
       />
-      <div className="mt-10"/>
+
+      <div className="mt-10" />
+
       <TableComponents
-        data={sampleActivityLogs}
+        loading={isLoading}
+        data={activityLogs?.data ?? []}
         columns={[
           {
-            key: "action",
-            header: "Action",
-          },
-          {
             key: "user",
-            header: "User",
-            render: (row) => row.user?.name,
+            header: "USER",
+            render: (row) => (
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center text-sm font-medium">
+                  {row.user?.name?.charAt(0).toUpperCase()}
+                </div>
+
+                <div>
+                  <p className="font-medium">
+                    {row.user?.name ?? "Unknown User"}
+                  </p>
+                  <p className="text-sm text-black/50">
+                    {row.user?.email}
+                  </p>
+                </div>
+              </div>
+            ),
           },
+
           {
-            key: "ticket",
-            header: "Ticket",
-            render: (row) => row.ticket?.ticket_number,
+            key: "description",
+            header: "ACTION DESCRIPTION",
+            render: (row) => (
+              <div>
+                <p className="font-medium">
+                  {row.description}
+                </p>
+
+                {row.ticket && (
+                  <p className="text-sm text-black/50">
+                    Ticket: {row.ticket.title}
+                  </p>
+                )}
+              </div>
+            ),
           },
+
           {
             key: "createdAt",
-            header: "Date",
-            render: (row) => new Date(row.createdAt).toLocaleString(),
+            header: "TIMESTAMP",
+            render: (row) => (
+              <div className="text-sm text-black/60">
+                {row.createdAt}
+              </div>
+            ),
           },
         ]}
+
+        pagination={{
+          page: activityLogs?.meta.page ?? 1,
+          totalPages: activityLogs?.meta.totalPages ?? 1,
+          total: activityLogs?.meta.total ?? 0,
+          limit,
+
+          onPageChange: handlePageChange,
+        }}
       />
     </div>
   );
