@@ -1,5 +1,4 @@
 import { api } from "../../../lib/appClient";
-import axios from "axios";
 import type { TicketComment } from "../types";
 
 export const getTicketComment = async (

@@ -1,7 +1,6 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { DirectInviteMembers } from "../api/DirectInviteMembers";
 export const useDirectInviteMembers = () => {
-  const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: DirectInviteMembers,
