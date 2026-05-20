@@ -4,6 +4,8 @@ import SearchComponent from "./Search";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useFetchMyWorkspaceById } from "../../features/workspace/hooks/useFetchMyWorkspaceById";
 import { useGetTicketById } from "../../features/tickets/hooks/useGetTicketsById";
+import UserMenu from "./UserMenu";
+import { useState } from "react";
 
 type HeaderProps = {
   onClick: () => void;
@@ -13,11 +15,14 @@ const Header = (props: HeaderProps) => {
   const location = useLocation();
   const navigate = useNavigate();
   const { id } = useParams();
+  const [open, setOpen] = useState(false);
 
   const activeWorkspaceId = localStorage.getItem("workspace");
   const { data: workspace } = useFetchMyWorkspaceById(activeWorkspaceId!);
 
-  const isWorkspacePage = (location.pathname === "/workspace" || location.pathname === "/workspace/create");
+  const isWorkspacePage =
+    location.pathname === "/workspace" ||
+    location.pathname === "/workspace/create";
 
   // only fetch when viewing ticket details
   const { data: ticket } = useGetTicketById(id!);
@@ -51,7 +56,11 @@ const Header = (props: HeaderProps) => {
             <>
               {/* SEARCH (LIST PAGE ONLY) */}
               <div className="md:w-40 lg:w-80 hidden lg:block">
-                <SearchComponent placeholder="Search tickets" />
+                <SearchComponent
+                  placeholder="Search tickets"
+                  onChange={() => null}
+                  value=""
+                />
               </div>
             </>
           )}
@@ -60,8 +69,12 @@ const Header = (props: HeaderProps) => {
 
       {/* RIGHT SIDE */}
       {isWorkspacePage ? (
-        <div className="flex items-center gap-3 justify-end w-full ">
-          <div className="h-7 w-7 cursor-pointer rounded-full bg-black"></div>
+        <div className="flex items-center gap-3 justify-end w-full relative">
+          <div
+            className="h-7 w-7 cursor-pointer rounded-full bg-black"
+            onClick={() => setOpen((prev) => !prev)}
+          ></div>
+          <UserMenu open={open} onClose={() => setOpen(false)} />
         </div>
       ) : (
         <div className="flex gap-5 items-center w-full lg:w-max justify-between lg:justify-start">
