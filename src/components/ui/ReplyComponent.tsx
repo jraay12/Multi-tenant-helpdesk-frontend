@@ -2,7 +2,6 @@ import { ArrowRight } from "lucide-react";
 import { useCreateTicketComment } from "../../features/tickets/hooks/useCreateTicketComments";
 import { useParams } from "react-router";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
 
 type FormValues = {
   message: string;
@@ -15,7 +14,6 @@ const ReplyComponent = () => {
   const {
     register,
     handleSubmit,
-    reset,
     setValue,
     formState: { isSubmitting, errors },
   } = useForm<FormValues>({

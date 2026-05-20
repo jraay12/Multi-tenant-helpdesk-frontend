@@ -123,7 +123,7 @@ function StatusCell({ status }: { status: Status }) {
   return (
     <div className="flex items-center gap-2">
       <span
-        className={`w-2 h-2 rounded-full flex-shrink-0 ${STATUS_DOT[status]}`}
+        className={`w-2 h-2 rounded-full shrink-0 ${STATUS_DOT[status]}`}
       />
       <span className={`text-sm ${STATUS_TEXT[status]}`}>{status}</span>
     </div>
@@ -147,7 +147,7 @@ function TicketBar({ value, max }: { value: number; max: number }) {
   );
 }
 
-function ThreeDotsMenu({ memberId }: { memberId: string }) {
+function ThreeDotsMenu({ }: { memberId: string }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -198,50 +198,6 @@ function ThreeDotsMenu({ memberId }: { memberId: string }) {
         </>
       )}
     </div>
-  );
-}
-
-function Checkbox({
-  checked,
-  onChange,
-  ariaLabel,
-}: {
-  checked: boolean;
-  onChange: () => void;
-  ariaLabel?: string;
-}) {
-  return (
-    <button
-      type="button"
-      role="checkbox"
-      aria-checked={checked}
-      aria-label={ariaLabel}
-      onClick={onChange}
-      className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors
-        ${
-          checked
-            ? "bg-blue-600 border-blue-600"
-            : "border-gray-300 bg-white hover:border-blue-400"
-        }`}
-    >
-      {checked && (
-        <svg
-          width="9"
-          height="9"
-          viewBox="0 0 12 12"
-          fill="none"
-          aria-hidden="true"
-        >
-          <polyline
-            points="2,6 5,9 10,3"
-            stroke="white"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
-      )}
-    </button>
   );
 }
 
@@ -306,36 +262,35 @@ function Pagination({
 
 // ── main component ────────────────────────────────────────────────────────────
 const TeamTable = ({ onInvite }: Props) => {
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  // const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [page, setPage] = useState(1);
   const { data } = useFetchWorkspaceMember();
-  console.log(data);
   const pagedMembers = data?.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  const members = pagedMembers ?? [];
+  // const members = pagedMembers ?? [];
 
-  const allPageSelected =
-    members?.length > 0 && pagedMembers?.every((m) => selectedIds.has(m.id));
+  // const allPageSelected =
+  //   members?.length > 0 && pagedMembers?.every((m) => selectedIds.has(m.id));
 
-  const toggleAll = () => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (allPageSelected) {
-        pagedMembers?.forEach((m) => next.delete(m.id));
-      } else {
-        pagedMembers?.forEach((m) => next.add(m.id));
-      }
-      return next;
-    });
-  };
+  // const toggleAll = () => {
+  //   setSelectedIds((prev) => {
+  //     const next = new Set(prev);
+  //     if (allPageSelected) {
+  //       pagedMembers?.forEach((m) => next.delete(m.id));
+  //     } else {
+  //       pagedMembers?.forEach((m) => next.add(m.id));
+  //     }
+  //     return next;
+  //   });
+  // };
 
-  const toggleOne = (id: string) => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      next.has(id) ? next.delete(id) : next.add(id);
-      return next;
-    });
-  };
+  // const toggleOne = (id: string) => {
+  //   setSelectedIds((prev) => {
+  //     const next = new Set(prev);
+  //     next.has(id) ? next.delete(id) : next.add(id);
+  //     return next;
+  //   });
+  // };
 
   return (
     <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
@@ -419,7 +374,7 @@ const TeamTable = ({ onInvite }: Props) => {
 
       {/* ── table ── */}
       <div className="overflow-x-auto ">
-        <table className="w-full min-w-[680px]">
+        <table className="w-full min-w-170">
           <thead>
             <tr className="border-b border-gray-100 bg-white">
               <th className="px-4 py-3 text-left text-xs font-semibold text-gray-400 uppercase tracking-wider">
@@ -444,11 +399,11 @@ const TeamTable = ({ onInvite }: Props) => {
             {pagedMembers?.map((member) => (
               <tr
                 key={member.id}
-                className={`transition-colors ${
-                  selectedIds.has(member.id)
-                    ? "bg-blue-50/50"
-                    : "hover:bg-gray-50/60"
-                }`}
+                // className={`transition-colors ${
+                //   selectedIds.has(member.id)
+                //     ? "bg-blue-50/50"
+                //     : "hover:bg-gray-50/60"
+                // }`}
               >
                 {/* member */}
                 <td className="px-4 py-4">
@@ -456,7 +411,7 @@ const TeamTable = ({ onInvite }: Props) => {
                     <img
                       src="https://i.pravatar.cc/40?img=47"
                       alt={member.user.name}
-                      className="w-9 h-9 rounded-full object-cover flex-shrink-0"
+                      className="w-9 h-9 rounded-full object-cover shrink-0"
                     />
                     <div>
                       <div className="text-sm font-semibold text-gray-900">

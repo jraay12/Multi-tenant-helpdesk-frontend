@@ -1,4 +1,4 @@
-import { Bell, User2, HelpCircleIcon, InfoIcon, ArrowLeft } from "lucide-react";
+import { Bell, User2, InfoIcon, ArrowLeft } from "lucide-react";
 import Button from "./Button";
 import SearchComponent from "./Search";
 import { useLocation, useNavigate, useParams } from "react-router";

@@ -35,9 +35,7 @@ const StatsCard = ({
   today,
   percent,
 }: StatsCardProps) => {
-  const isTodayPositive = today && today > 0;
-  const isPercentPositive = percent && percent > 0;
-
+  
   return (
     <div className="bg-white shadow-sm border border-gray-200 rounded-xl p-5">
       <div className="flex flex-col gap-3">

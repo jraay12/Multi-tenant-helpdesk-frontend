@@ -16,9 +16,6 @@ interface FormValues {
   description: string;
 }
 
-interface FormState extends FormValues {
-  avatarColor: AvatarColor;
-}
 
 // ── constants ──────────────────────────────────────────────────────────────
 const AVATAR_COLORS: AvatarColor[] = [
@@ -75,12 +72,8 @@ const FieldHint = ({ children, variant = "default" }: HintProps) => (
   </p>
 );
 
-// ── main component ─────────────────────────────────────────────────────────
-interface WorkspaceCreationProps {
-  onContinue?: (data: FormState) => void;
-}
 
-const WorkspaceCreation = ({ onContinue }: WorkspaceCreationProps) => {
+const WorkspaceCreation = () => {
   const createWorkspaceMutation = useCreateWorkspace();
   const navigate = useNavigate();
 
@@ -119,7 +112,7 @@ const WorkspaceCreation = ({ onContinue }: WorkspaceCreationProps) => {
       <Header onClick={() => null} />
 
       <div className="flex-1 flex items-start justify-center px-4 py-10">
-        <div className="w-full max-w-[480px] bg-white border border-gray-200 rounded-2xl overflow-hidden">
+        <div className="w-full max-w-120 bg-white border border-gray-200 rounded-2xl overflow-hidden">
           {/* step indicator */}
           <div className="flex items-center px-7 pt-6 pb-0">
             <div className="flex items-center gap-2">
@@ -182,7 +175,7 @@ const WorkspaceCreation = ({ onContinue }: WorkspaceCreationProps) => {
 
                 <div className="flex items-center gap-4">
                   <div
-                    className={`w-14 h-14 rounded-xl flex items-center justify-center text-xl font-bold tracking-tight flex-shrink-0 transition-all ${avatarColor.bg} ${avatarColor.text}`}
+                    className={`w-14 h-14 rounded-xl flex items-center justify-center text-xl font-bold tracking-tight shrink-0 transition-all ${avatarColor.bg} ${avatarColor.text}`}
                   >
                     {initials}
                   </div>
