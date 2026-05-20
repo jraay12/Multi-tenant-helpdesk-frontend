@@ -24,8 +24,8 @@ jobs:
       - name: Build Vite app
         run: npm run build
         env:
-          VITE_API_URL: http://31.97.108.149:3010
-          VITE_SOCKET_URL: http://31.97.108.149:3010
+          VITE_API_URL: https://falling-couple-senate-voltage.trycloudflare.com
+          VITE_SOCKET_URL: https://falling-couple-senate-voltage.trycloudflare.com
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
