@@ -10,6 +10,8 @@ const DashboardPage = () => {
 
   return (
     <div className="p-7 bg-[#F6F7F9] min-h-screen overflow-scroll max-h-screen">
+      {/* Overview */}
+      <h1 className="mb-4 font-medium text-xl">Dashboard Overview</h1>
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
         {stats &&
@@ -23,9 +25,6 @@ const DashboardPage = () => {
             />
           ))}
       </div>
-
-      {/* Overview */}
-      <h1 className="mt-10 font-medium text-xl">Dashboard Overview</h1>
 
       {/* Dashboard Grid */}
       <div className="mt-5 grid grid-cols-1 xl:grid-cols-12 gap-5 mb-10">
@@ -72,7 +71,7 @@ const DashboardPage = () => {
         </div>
 
         {/* Recent Tickets */}
-        <div className="xl:col-span-7 min-h-[350px]">
+        <div className="xl:col-span-12 min-h-[350px]">
           <h1 className="font-medium mb-2 text-[18px]">Recent Tickets</h1>
 
           <div className="space-y-3">
@@ -93,31 +92,6 @@ const DashboardPage = () => {
                 No Recent Tickets Found
               </div>
             )}
-          </div>
-        </div>
-
-        {/* Activity Log */}
-        <div className="xl:col-span-5 bg-white border border-gray-200 rounded-2xl p-5 shadow-sm min-h-[350px]">
-          <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-lg">Activity Log</h2>
-
-            <button className="text-sm text-blue-600 hover:underline">
-              More
-            </button>
-          </div>
-
-          <div className="mt-5 flex flex-col gap-5">
-            {[1, 2, 3, 4, 5].map((item) => (
-              <div key={item} className="flex gap-3">
-                <div className="w-2 h-2 rounded-full bg-blue-500 mt-2" />
-
-                <div>
-                  <p className="text-sm font-medium">Ticket assigned to John</p>
-
-                  <p className="text-xs text-gray-500 mt-1">5 mins ago</p>
-                </div>
-              </div>
-            ))}
           </div>
         </div>
       </div>

@@ -20,6 +20,7 @@ export interface MyWorkspaceResponseById {
     updatedAt: Date;
   };
   role: string;
+  name: string
 }
 
 export interface WorkspaceMembers {

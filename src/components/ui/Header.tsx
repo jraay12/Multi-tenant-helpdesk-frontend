@@ -1,11 +1,17 @@
-import { Bell, User2, InfoIcon, ArrowLeft } from "lucide-react";
+import {
+  Bell,
+  InfoIcon,
+  ArrowLeft,
+  ChevronDown,
+  ChevronUp,
+} from "lucide-react";
 import Button from "./Button";
-import SearchComponent from "./Search";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { useFetchMyWorkspaceById } from "../../features/workspace/hooks/useFetchMyWorkspaceById";
 import { useGetTicketById } from "../../features/tickets/hooks/useGetTicketsById";
 import UserMenu from "./UserMenu";
 import { useState } from "react";
+import { useMyDetails } from "../../features/auth/hooks/useMyDetails";
 
 type HeaderProps = {
   onClick: () => void;
@@ -26,7 +32,7 @@ const Header = (props: HeaderProps) => {
 
   // only fetch when viewing ticket details
   const { data: ticket } = useGetTicketById(id!);
-
+  const { data: mydetails } = useMyDetails();
   const isTicketDetails = !!id;
 
   return (
@@ -55,13 +61,13 @@ const Header = (props: HeaderProps) => {
           ) : (
             <>
               {/* SEARCH (LIST PAGE ONLY) */}
-              <div className="md:w-40 lg:w-80 hidden lg:block">
+              {/* <div className="md:w-40 lg:w-80 hidden lg:block">
                 <SearchComponent
                   placeholder="Search tickets"
                   onChange={() => null}
                   value=""
                 />
-              </div>
+              </div> */}
             </>
           )}
         </div>
@@ -69,12 +75,17 @@ const Header = (props: HeaderProps) => {
 
       {/* RIGHT SIDE */}
       {isWorkspacePage ? (
-        <div className="flex items-center gap-3 justify-end w-full relative">
-          <div
-            className="h-7 w-7 cursor-pointer rounded-full bg-black"
-            onClick={() => setOpen((prev) => !prev)}
-          ></div>
-          <UserMenu open={open} onClose={() => setOpen(false)} />
+        <div className="flex items-center gap-3 justify-end w-full relative cursor-pointer" onClick={() => setOpen((prev) => !prev)}>
+          <img
+            src="https://i.pravatar.cc/40?img=47"
+            alt="profile"
+            className="w-6 h-6 rounded-full object-cover shrink-0"
+          />
+          <UserMenu
+            open={open}
+            onClose={() => setOpen(false)}
+            data={mydetails}
+          />
         </div>
       ) : (
         <div className="flex gap-5 items-center w-full lg:w-max justify-between lg:justify-start">
@@ -93,12 +104,23 @@ const Header = (props: HeaderProps) => {
 
           <div className="hidden lg:block border-l border-gray-400 w-4 h-10"></div>
 
-          <div className="hidden lg:flex items-center gap-4">
-            <User2 />
-            <div className="flex flex-col w-30 text-center font-medium">
-              <h1 className="text-xs">Alex Rivera</h1>
-              <p className="text-xs">{workspace?.role}</p>
+          <div className="border border-[#16377d] p-1 rounded-full cursor-pointer">
+            <div
+              className="flex items-center select-none gap-3"
+              onClick={() => setOpen((prev) => !prev)}
+            >
+              <img
+                src="https://i.pravatar.cc/40?img=47"
+                alt="profile"
+                className="w-6 h-6 rounded-full object-cover shrink-0"
+              />
+              {open ? <ChevronUp /> : <ChevronDown />}
             </div>
+            <UserMenu
+              open={open}
+              onClose={() => setOpen(false)}
+              data={workspace}
+            />
           </div>
         </div>
       )}
