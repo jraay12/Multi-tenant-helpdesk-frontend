@@ -1,11 +1,4 @@
-type RecentTicketProps = {
-  title: string;
-  timeAgo: string;
-  priority: string;
-  status: string;
-  customer_name: string;
-  category: string;
-};
+import type { RecentTicketResponse } from "../../features/dashboard/types";
 
 const STATUS_CONFIG = {
   OPEN: {
@@ -59,49 +52,94 @@ const PRIORITY_CONFIG = {
   },
 };
 
-const RecentTicketTable = (props: RecentTicketProps) => {
-  const statusConfig =
-    STATUS_CONFIG[props.status as keyof typeof STATUS_CONFIG];
 
-  const priorityConfig =
-    PRIORITY_CONFIG[props.priority as keyof typeof PRIORITY_CONFIG];
 
+const RecentTicketTable = ({data}: {data: RecentTicketResponse[]}) => {
   return (
-    <div className="border border-[#F0F0F0] min-h-14 bg-white rounded-2xl p-3">
-      <div className="flex justify-between gap-3">
-        <div className="flex flex-col gap-2">
-          <h1 className="font-medium">{props.title}</h1>
+    <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white">
+      <table className="w-full border-collapse">
+        <thead className="bg-gray-50 text-left">
+          <tr>
+            <th className="px-4 py-3 text-sm font-semibold text-gray-600">
+              ID
+            </th>
 
-          <div className="flex gap-4 items-center flex-wrap">
-            {/* STATUS */}
-            <p
-              className="ml-1 font-medium text-xs p-1 rounded-2xl px-2"
-              style={{
-                backgroundColor: statusConfig.bg,
-                color: statusConfig.color,
-              }}
-            >
-              {statusConfig.label}
-            </p>
+            <th className="px-4 py-3 text-sm font-semibold text-gray-600">
+              SUBJECT
+            </th>
 
-            {/* META */}
-            <p className="text-[#BBBBBB] text-xs">
-              {props.category} · {props.customer_name} · {props.timeAgo}
-            </p>
-          </div>
-        </div>
+            <th className="px-4 py-3 text-sm font-semibold text-gray-600">
+              STATUS
+            </th>
 
-        {/* PRIORITY */}
-        <p
-          className="font-medium text-xs p-1 rounded-2xl px-2 h-fit"
-          style={{
-            backgroundColor: priorityConfig.bg,
-            color: priorityConfig.color,
-          }}
-        >
-          {priorityConfig.label}
-        </p>
-      </div>
+            <th className="px-4 py-3 text-sm font-semibold text-gray-600">
+              PRIORITY
+            </th>
+
+            <th className="px-4 py-3 text-sm font-semibold text-gray-600">
+              TIMESTAMP
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {data.map((ticket) => {
+            const statusConfig = STATUS_CONFIG[ticket.status];
+            const priorityConfig = PRIORITY_CONFIG[ticket.priority];
+
+            return (
+              <tr
+                key={ticket.id}
+                className="border-t border-gray-100 hover:bg-gray-50"
+              >
+                <td className="px-4 py-4 text-sm font-medium text-gray-700">
+                  #TK-{ticket.ticket_number}
+                </td>
+
+                <td className="px-4 py-4">
+                  <div className="flex flex-col">
+                    <span className="text-sm font-semibold text-gray-800">
+                      {ticket.title}
+                    </span>
+
+                    <span className="text-xs text-gray-500">
+                      {ticket.customer_name} • {ticket.category}
+                    </span>
+                  </div>
+                </td>
+
+                <td className="px-4 py-4">
+                  <span
+                    className="rounded-full px-3 py-1 text-xs font-semibold"
+                    style={{
+                      backgroundColor: statusConfig.bg,
+                      color: statusConfig.color,
+                    }}
+                  >
+                    {statusConfig.label}
+                  </span>
+                </td>
+
+                <td className="px-4 py-4">
+                  <span
+                    className="rounded-full px-3 py-1 text-xs font-semibold"
+                    style={{
+                      backgroundColor: priorityConfig.bg,
+                      color: priorityConfig.color,
+                    }}
+                  >
+                    {priorityConfig.label}
+                  </span>
+                </td>
+
+                <td className="px-4 py-4 text-sm text-gray-500">
+                  {ticket.timeAgo}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 };

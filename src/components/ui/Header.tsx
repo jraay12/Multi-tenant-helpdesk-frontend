@@ -15,6 +15,7 @@ import { useMyDetails } from "../../features/auth/hooks/useMyDetails";
 
 type HeaderProps = {
   onClick: () => void;
+  ticketCount: number;
 };
 
 const Header = (props: HeaderProps) => {
@@ -32,7 +33,6 @@ const Header = (props: HeaderProps) => {
 
   // only fetch when viewing ticket details
   const { data: ticket } = useGetTicketById(id!);
-  const { data: mydetails } = useMyDetails();
   const isTicketDetails = !!id;
 
   return (
@@ -60,14 +60,15 @@ const Header = (props: HeaderProps) => {
             </>
           ) : (
             <>
-              {/* SEARCH (LIST PAGE ONLY) */}
-              {/* <div className="md:w-40 lg:w-80 hidden lg:block">
-                <SearchComponent
-                  placeholder="Search tickets"
-                  onChange={() => null}
-                  value=""
-                />
-              </div> */}
+              {location.pathname === "/tickets" && (
+                <div className="flex items-center gap-2">
+                  <h1 className="text-[#1d3785] font-bold text-2xl">Tickets</h1>
+
+                  <span className="bg-[#1d3785] text-white rounded-full px-2 py-[2px] text-xs font-semibold min-w-6 text-center">
+                    {props.ticketCount ?? 0}
+                  </span>
+                </div>
+              )}
             </>
           )}
         </div>
@@ -75,7 +76,10 @@ const Header = (props: HeaderProps) => {
 
       {/* RIGHT SIDE */}
       {isWorkspacePage ? (
-        <div className="flex items-center gap-3 justify-end w-full relative cursor-pointer" onClick={() => setOpen((prev) => !prev)}>
+        <div
+          className="flex items-center gap-3 justify-end w-full relative cursor-pointer"
+          onClick={() => setOpen((prev) => !prev)}
+        >
           <img
             src="https://i.pravatar.cc/40?img=47"
             alt="profile"
@@ -84,12 +88,12 @@ const Header = (props: HeaderProps) => {
           <UserMenu
             open={open}
             onClose={() => setOpen(false)}
-            data={mydetails}
+            data={workspace}
           />
         </div>
       ) : (
         <div className="flex gap-5 items-center w-full lg:w-max justify-between lg:justify-start">
-          <h1 className="lg:hidden text-[18px] font-medium">ResolvDesk</h1>
+          <div className="lg:hidden text-[18px] font-medium"></div>
           <div>
             <Button button_name="Create Ticket" onClick={props.onClick} />{" "}
           </div>
@@ -102,9 +106,9 @@ const Header = (props: HeaderProps) => {
             <InfoIcon className="p-1 w-6 h-6" />
           </div>
 
-          <div className="hidden lg:block border-l border-gray-400 w-4 h-10"></div>
+          {/* <div className="hidden lg:block border-l border-gray-400 w-4 h-10"></div> */}
 
-          <div className="border border-[#16377d] p-1 rounded-full cursor-pointer">
+          {/* <div className="border border-[#16377d] p-1 rounded-full cursor-pointer">
             <div
               className="flex items-center select-none gap-3"
               onClick={() => setOpen((prev) => !prev)}
@@ -121,7 +125,7 @@ const Header = (props: HeaderProps) => {
               onClose={() => setOpen(false)}
               data={workspace}
             />
-          </div>
+          </div> */}
         </div>
       )}
     </div>

@@ -37,7 +37,7 @@ const TableComponents = <T,>({
   return (
     <div className="w-full border border-gray-200 rounded-lg overflow-hidden bg-white mb-10 ">
       {/* TABLE */}
-      <table className="w-full border-collapse min-h-120">
+      <table className="w-full border-collapse">
         {/* HEADER */}
         <thead className="bg-[#edeef7] border-b border-gray-300">
           <tr>

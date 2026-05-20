@@ -8,14 +8,23 @@ import {
   BarChart3,
   Activity,
   Settings,
+  Book,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
+import { useMyDetails } from "../../features/auth/hooks/useMyDetails";
+import UserMenu from "./UserMenu";
+import { useState } from "react";
 
 const SideBar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const activeWorkspaceId = localStorage.getItem("workspace");
+  const [open, setOpen] = useState(false);
+  
 
   const { data } = useFetchMyWorkspaceById(activeWorkspaceId!);
+  const { data: mydetails } = useMyDetails();
 
   const updatedMenu = [
     {
@@ -31,12 +40,6 @@ const SideBar = () => {
           value: "alltickets",
           icon: Ticket,
           path: "/tickets",
-        },
-        {
-          label: "My Tickets",
-          value: "myticket",
-          icon: Ticket,
-          path: "/my-ticket",
         },
         {
           label: "Notifications",
@@ -82,19 +85,34 @@ const SideBar = () => {
   };
 
   return (
-    <div className="hidden w-full h-screen bg-[#FAFAFA] py-6 md:flex flex-col">
+    <div className="hidden w-full h-screen bg-[#ffffff] pt-6 md:flex flex-col">
       {/* Logo */}
       <div className="mb-10">
-        <h1 className="font-bold text-2xl text-center text-black tracking-wide hidden lg:block">
-          {data?.workspace.name}
-        </h1>
+        <div className="flex items-center border border-gray-300 rounded-xl mx-4 h-14 bg-[#ebedf0] gap-4 cursor-pointer select-none" onClick={() => setOpen((prev) => !prev)}>
+          <img
+            src="https://i.pravatar.cc/40?img=47"
+            alt="profile"
+            className="w-10   h-10 rounded-full object-cover shrink-0 ml-4"
+          />
+          <div className="flex flex-col">
+            <h1 className="text-sm font-medium">{data?.workspace.name}</h1>
+            <p className="text-xs text-black/50">Free plan</p>
+          </div>
+          <div className="flex flex-col ">
+            <ChevronUp className="w-4"/>
+            <ChevronDown className="w-4"/>
+          </div>
+          <UserMenu onClose={() => setOpen(false)} open={open} data={data}/>
+        </div>
       </div>
 
       <div className="flex flex-col gap-5 px-4">
         {updatedMenu.map((updatedMenu) =>
           Object.entries(updatedMenu).map(([key, value]) => (
             <div key={key} className="space-y-2">
-              <h1 className="hidden lg:block font-bold text-xs text-black/40">{key}</h1>
+              <h1 className="hidden lg:block font-bold text-xs text-black/40">
+                {key}
+              </h1>
 
               <div className="space-y-2">
                 {value.map((item) => {
@@ -119,6 +137,19 @@ const SideBar = () => {
             </div>
           )),
         )}
+      </div>
+
+      <div className="grow" />
+      <div className="flex gap-4 py-10 items-center h-10 border-t border-gray-300">
+        <img
+          src="https://i.pravatar.cc/40?img=47"
+          alt="profile"
+          className="w-10   h-10 rounded-full object-cover shrink-0 ml-4"
+        />
+        <div className="flex flex-col">
+          <h1 className="text-sm text-black">{mydetails?.name}</h1>
+          <p className="text-xs text-black/50">{data?.role}</p>
+        </div>
       </div>
     </div>
   );

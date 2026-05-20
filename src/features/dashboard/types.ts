@@ -1,10 +1,8 @@
 // types.ts
 
-export type TicketStatus =
-  | "OPEN"
-  | "IN_PROGRESS"
-  | "RESOLVED"
-  | "CLOSED";
+export type TicketStatus = "OPEN" | "IN_PROGRESS" | "RESOLVED" | "CLOSED";
+
+export type TicketPriority = "LOW" | "MEDIUM" | "HIGH" | "URGENT";
 
 export type TicketStatisticItem = {
   total: number;
@@ -17,15 +15,16 @@ export type TicketStatisticResponse = {
 };
 
 export interface RecentTicketResponse {
-  id: string
-  title: string
-  status: string
-  category: string
-  customer_name: string
-  createAt: Date
-  priority: string
+  id: string;
+  title: string;
+  status: TicketStatus;
+  category: string;
+  customer_name: string;
+  createAt: Date;
+  priority: TicketPriority;
   assignedTo: {
-    name: string
-  } | null
-  timeAgo: string
+    name: string;
+  } | null;
+  timeAgo: string;
+  ticket_number: string
 }

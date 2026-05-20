@@ -42,7 +42,6 @@ const DashboardPage = () => {
             Chart Placeholder
           </div>
         </div>
-
         {/* Agent Performance */}
         <div className="xl:col-span-4 bg-white border border-gray-200 rounded-2xl p-5 shadow-sm min-h-[320px]">
           <div className="flex items-center justify-between">
@@ -69,24 +68,12 @@ const DashboardPage = () => {
             ))}
           </div>
         </div>
-
-        {/* Recent Tickets */}
-        <div className="xl:col-span-12 min-h-[350px]">
+        <div className="xl:col-span-12 min-h-[350px] ">
           <h1 className="font-medium mb-2 text-[18px]">Recent Tickets</h1>
 
           <div className="space-y-3">
             {recentTickets?.length ? (
-              recentTickets.map((ticket) => (
-                <RecentTicketTable
-                  key={ticket.id}
-                  category={ticket.category}
-                  customer_name={ticket.customer_name}
-                  priority={ticket.priority}
-                  status={ticket.status}
-                  timeAgo={ticket.timeAgo}
-                  title={ticket.title}
-                />
-              ))
+              <RecentTicketTable data={recentTickets}/>
             ) : (
               <div className="text-gray-500 text-sm">
                 No Recent Tickets Found

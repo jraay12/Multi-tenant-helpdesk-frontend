@@ -1,10 +1,24 @@
 import { useQuery } from "@tanstack/react-query";
-import { getTicket } from "../api/GetWorkspaceTickets";
+import {
+  getTicket,
+  type TicketScope,
+} from "../api/GetWorkspaceTickets";
 
-export const useGetTickets = () => {
-  const workspaceId = localStorage.getItem("workspace")
+type UseGetTicketsProps = {
+  scope?: TicketScope;
+};
+
+export const useGetTickets = ({
+  scope = "all",
+}: UseGetTicketsProps = {}) => {
+  const workspaceId = localStorage.getItem("workspace");
+
   return useQuery({
-    queryKey: ['ticket', workspaceId],
-    queryFn: getTicket
-  })
-}
+    queryKey: ["ticket", workspaceId, scope],
+
+    queryFn: () =>
+      getTicket({
+        scope,
+      }),
+  });
+};
